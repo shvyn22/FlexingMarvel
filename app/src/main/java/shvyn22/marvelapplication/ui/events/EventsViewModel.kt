@@ -8,13 +8,13 @@ import androidx.paging.cachedIn
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import shvyn22.marvelapplication.data.AppRepository
+import shvyn22.marvelapplication.data.repository.RemoteRepository
 import shvyn22.marvelapplication.data.PreferencesManager
-import shvyn22.marvelapplication.data.dao.EventDao
-import shvyn22.marvelapplication.data.entity.Event
+import shvyn22.marvelapplication.data.local.dao.EventDao
+import shvyn22.marvelapplication.data.model.EventModel
 
 class EventsViewModel @ViewModelInject constructor(
-    private val repository: AppRepository,
+    private val repository: RemoteRepository,
     private val eventDao: EventDao,
     private val prefsManager: PreferencesManager,
     @Assisted state: SavedStateHandle
@@ -40,7 +40,7 @@ class EventsViewModel @ViewModelInject constructor(
         searchQuery.value = query
     }
 
-    fun onItemClick(item: Event) = viewModelScope.launch {
+    fun onItemClick(item: EventModel) = viewModelScope.launch {
         eventChannel.send(EventFragmentEvent.NavigateToDetails(item))
     }
 
@@ -54,6 +54,6 @@ class EventsViewModel @ViewModelInject constructor(
     }
 
     sealed class EventFragmentEvent {
-        data class NavigateToDetails(val item: Event) : EventFragmentEvent()
+        data class NavigateToDetails(val item: EventModel) : EventFragmentEvent()
     }
 }

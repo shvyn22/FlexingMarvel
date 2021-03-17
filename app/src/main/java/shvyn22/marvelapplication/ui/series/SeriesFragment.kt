@@ -19,7 +19,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import shvyn22.marvelapplication.R
-import shvyn22.marvelapplication.data.entity.Series
+import shvyn22.marvelapplication.data.model.SeriesModel
 import shvyn22.marvelapplication.databinding.FragmentSeriesBinding
 import shvyn22.marvelapplication.ui.adapters.PagingLoadStateAdapter
 import shvyn22.marvelapplication.ui.adapters.SeriesAdapter
@@ -122,11 +122,11 @@ class SeriesFragment : Fragment(R.layout.fragment_series),
         navBar?.visibility = View.VISIBLE
     }
 
-    override fun onItemClick(item: Series) {
+    override fun onItemClick(item: SeriesModel) {
         viewModel.onItemClick(item)
     }
 
-    override fun onSeriesItemClick(item: Series) {
+    override fun onSeriesItemClick(item: SeriesModel) {
         viewModel.onItemClick(item)
     }
 

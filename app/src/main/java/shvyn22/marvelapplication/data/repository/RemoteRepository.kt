@@ -1,4 +1,4 @@
-package shvyn22.marvelapplication.data
+package shvyn22.marvelapplication.data.repository
 
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -11,7 +11,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AppRepository @Inject constructor(private val api: ApiInterface){
+class RemoteRepository @Inject constructor(
+    private val api: ApiInterface
+){
     fun getCharactersResults(query: String) =
         Pager(
             config = PagingConfig(

@@ -8,11 +8,11 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import shvyn22.marvelapplication.MarvelApplication.Companion.SERIES_COMPARATOR
 import shvyn22.marvelapplication.R
-import shvyn22.marvelapplication.data.entity.Series
+import shvyn22.marvelapplication.data.model.SeriesModel
 import shvyn22.marvelapplication.databinding.ItemMainBinding
 
 class SeriesPagingAdapter(private val listener: OnItemClickListener)
-    : PagingDataAdapter<Series, SeriesPagingAdapter.SeriesViewHolder>(SERIES_COMPARATOR) {
+    : PagingDataAdapter<SeriesModel, SeriesPagingAdapter.SeriesViewHolder>(SERIES_COMPARATOR) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SeriesViewHolder {
         return SeriesViewHolder(ItemMainBinding.inflate(
@@ -38,7 +38,7 @@ class SeriesPagingAdapter(private val listener: OnItemClickListener)
             }
         }
 
-        fun bind(item : Series) {
+        fun bind(item : SeriesModel) {
             binding.apply {
                 Glide.with(itemView)
                         .load(item.thumbnail.getFullUrl())
@@ -53,6 +53,6 @@ class SeriesPagingAdapter(private val listener: OnItemClickListener)
     }
 
     interface OnItemClickListener {
-        fun onItemClick(item: Series)
+        fun onItemClick(item: SeriesModel)
     }
 }

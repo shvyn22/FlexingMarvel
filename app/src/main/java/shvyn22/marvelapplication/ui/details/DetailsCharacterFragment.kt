@@ -13,8 +13,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import shvyn22.marvelapplication.R
-import shvyn22.marvelapplication.data.entity.Event
-import shvyn22.marvelapplication.data.entity.Series
+import shvyn22.marvelapplication.data.model.EventModel
+import shvyn22.marvelapplication.data.model.SeriesModel
 import shvyn22.marvelapplication.databinding.FragmentDetailsCharacterBinding
 import shvyn22.marvelapplication.ui.adapters.EventAdapter
 import shvyn22.marvelapplication.ui.adapters.SeriesAdapter
@@ -115,11 +115,11 @@ class DetailsCharacterFragment : Fragment(R.layout.fragment_details_character),
         }
     }
 
-    override fun onEventItemClick(item: Event) {
+    override fun onEventItemClick(item: EventModel) {
         viewModel.onEventItemClick(item)
     }
 
-    override fun onSeriesItemClick(item: Series) {
+    override fun onSeriesItemClick(item: SeriesModel) {
         viewModel.onSeriesItemClick(item)
     }
 }

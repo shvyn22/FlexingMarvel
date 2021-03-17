@@ -4,9 +4,9 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 import shvyn22.marvelapplication.BuildConfig
-import shvyn22.marvelapplication.data.entity.Event
-import shvyn22.marvelapplication.data.entity.MarvelCharacter
-import shvyn22.marvelapplication.data.entity.Series
+import shvyn22.marvelapplication.data.model.EventModel
+import shvyn22.marvelapplication.data.model.CharacterModel
+import shvyn22.marvelapplication.data.model.SeriesModel
 
 interface ApiInterface {
     companion object {
@@ -24,7 +24,7 @@ interface ApiInterface {
         @Query("ts") ts : String = TS,
         @Query("apikey") apiKey: String = KEY,
         @Query("hash") hash: String = HASH
-    ) : ApiResponse<MarvelCharacter>
+    ) : ApiResponse<CharacterModel>
 
     @GET("characters")
     suspend fun getCharactersByName(
@@ -34,7 +34,7 @@ interface ApiInterface {
         @Query("ts") ts : String = TS,
         @Query("apikey") apiKey: String = KEY,
         @Query("hash") hash: String = HASH
-    ) : ApiResponse<MarvelCharacter>
+    ) : ApiResponse<CharacterModel>
 
     @GET("characters/{characterId}/series")
     suspend fun getCharacterSeries(
@@ -42,7 +42,7 @@ interface ApiInterface {
         @Query("ts") ts : String = TS,
         @Query("apikey") apiKey: String = KEY,
         @Query("hash") hash: String = HASH
-    ) : ApiResponse<Series>
+    ) : ApiResponse<SeriesModel>
 
     @GET("characters/{characterId}/events")
     suspend fun getCharacterEvents(
@@ -50,7 +50,7 @@ interface ApiInterface {
         @Query("ts") ts : String = TS,
         @Query("apikey") apiKey: String = KEY,
         @Query("hash") hash: String = HASH
-    ) : ApiResponse<Event>
+    ) : ApiResponse<EventModel>
 
     @GET("series")
     suspend fun getSeries(
@@ -59,7 +59,7 @@ interface ApiInterface {
         @Query("ts") ts : String = TS,
         @Query("apikey") apiKey: String = KEY,
         @Query("hash") hash: String = HASH
-    ) : ApiResponse<Series>
+    ) : ApiResponse<SeriesModel>
 
     @GET("series")
     suspend fun getSeriesByTitle(
@@ -69,7 +69,7 @@ interface ApiInterface {
         @Query("ts") ts : String = TS,
         @Query("apikey") apiKey: String = KEY,
         @Query("hash") hash: String = HASH
-    ) : ApiResponse<Series>
+    ) : ApiResponse<SeriesModel>
 
     @GET("series/{seriesId}/characters")
     suspend fun getSeriesCharacters(
@@ -77,7 +77,7 @@ interface ApiInterface {
         @Query("ts") ts : String = TS,
         @Query("apikey") apiKey: String = KEY,
         @Query("hash") hash: String = HASH
-    ) : ApiResponse<MarvelCharacter>
+    ) : ApiResponse<CharacterModel>
 
     @GET("series/{seriesId}/events")
     suspend fun getSeriesEvents(
@@ -85,7 +85,7 @@ interface ApiInterface {
         @Query("ts") ts : String = TS,
         @Query("apikey") apiKey: String = KEY,
         @Query("hash") hash: String = HASH
-    ) : ApiResponse<Event>
+    ) : ApiResponse<EventModel>
 
     @GET("events")
     suspend fun getEvents(
@@ -94,7 +94,7 @@ interface ApiInterface {
         @Query("ts") ts : String = TS,
         @Query("apikey") apiKey: String = KEY,
         @Query("hash") hash: String = HASH
-    ) : ApiResponse<Event>
+    ) : ApiResponse<EventModel>
 
     @GET("events")
     suspend fun getEventByName(
@@ -104,7 +104,7 @@ interface ApiInterface {
         @Query("ts") ts : String = TS,
         @Query("apikey") apiKey: String = KEY,
         @Query("hash") hash: String = HASH
-    ) : ApiResponse<Event>
+    ) : ApiResponse<EventModel>
 
     @GET("events/{eventId}/characters")
     suspend fun getEventCharacters(
@@ -112,7 +112,7 @@ interface ApiInterface {
         @Query("ts") ts : String = TS,
         @Query("apikey") apiKey: String = KEY,
         @Query("hash") hash: String = HASH
-    ) : ApiResponse<MarvelCharacter>
+    ) : ApiResponse<CharacterModel>
 
     @GET("events/{eventId}/series")
     suspend fun getEventSeries(
@@ -120,5 +120,5 @@ interface ApiInterface {
         @Query("ts") ts : String = TS,
         @Query("apikey") apiKey: String = KEY,
         @Query("hash") hash: String = HASH
-    ) : ApiResponse<Series>
+    ) : ApiResponse<SeriesModel>
 }

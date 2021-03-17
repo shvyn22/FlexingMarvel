@@ -8,13 +8,13 @@ import androidx.paging.cachedIn
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import shvyn22.marvelapplication.data.AppRepository
+import shvyn22.marvelapplication.data.repository.RemoteRepository
 import shvyn22.marvelapplication.data.PreferencesManager
-import shvyn22.marvelapplication.data.dao.SeriesDao
-import shvyn22.marvelapplication.data.entity.Series
+import shvyn22.marvelapplication.data.local.dao.SeriesDao
+import shvyn22.marvelapplication.data.model.SeriesModel
 
 class SeriesViewModel @ViewModelInject constructor(
-    private val repository: AppRepository,
+    private val repository: RemoteRepository,
     private val seriesDao: SeriesDao,
     private val prefsManager: PreferencesManager,
     @Assisted val state: SavedStateHandle
@@ -40,7 +40,7 @@ class SeriesViewModel @ViewModelInject constructor(
         searchQuery.value = query
     }
 
-    fun onItemClick(item: Series) = viewModelScope.launch {
+    fun onItemClick(item: SeriesModel) = viewModelScope.launch {
         seriesEventChannel.send(SeriesEvent.NavigateToDetails(item))
     }
 
@@ -54,6 +54,6 @@ class SeriesViewModel @ViewModelInject constructor(
     }
 
     sealed class SeriesEvent {
-        data class NavigateToDetails(val item: Series) : SeriesEvent()
+        data class NavigateToDetails(val item: SeriesModel) : SeriesEvent()
     }
 }

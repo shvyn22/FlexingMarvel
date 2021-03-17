@@ -19,7 +19,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import shvyn22.marvelapplication.R
-import shvyn22.marvelapplication.data.entity.MarvelCharacter
+import shvyn22.marvelapplication.data.model.CharacterModel
 import shvyn22.marvelapplication.databinding.FragmentCharactersBinding
 import shvyn22.marvelapplication.ui.adapters.CharacterAdapter
 import shvyn22.marvelapplication.ui.adapters.PagingLoadStateAdapter
@@ -122,11 +122,11 @@ class CharactersFragment : Fragment(R.layout.fragment_characters),
         navBar?.visibility = View.VISIBLE
     }
 
-    override fun onItemClick(item: MarvelCharacter) {
+    override fun onItemClick(item: CharacterModel) {
         viewModel.onItemClick(item)
     }
 
-    override fun onCharacterItemClick(item: MarvelCharacter) {
+    override fun onCharacterItemClick(item: CharacterModel) {
         viewModel.onItemClick(item)
     }
 

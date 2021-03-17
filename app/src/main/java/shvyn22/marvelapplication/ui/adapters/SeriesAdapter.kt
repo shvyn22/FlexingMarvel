@@ -8,11 +8,11 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import shvyn22.marvelapplication.MarvelApplication.Companion.SERIES_COMPARATOR
 import shvyn22.marvelapplication.R
-import shvyn22.marvelapplication.data.entity.Series
+import shvyn22.marvelapplication.data.model.SeriesModel
 import shvyn22.marvelapplication.databinding.ItemDetailsBinding
 
 class SeriesAdapter(private val listener: OnItemClickListener)
-    : ListAdapter<Series, SeriesAdapter.SeriesViewHolder>(SERIES_COMPARATOR) {
+    : ListAdapter<SeriesModel, SeriesAdapter.SeriesViewHolder>(SERIES_COMPARATOR) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SeriesViewHolder {
         return SeriesViewHolder(
@@ -39,7 +39,7 @@ class SeriesAdapter(private val listener: OnItemClickListener)
             }
         }
 
-        fun bind(item : Series) {
+        fun bind(item : SeriesModel) {
             binding.apply {
                 Glide.with(itemView)
                     .load(item.thumbnail.getFullUrl())
@@ -53,6 +53,6 @@ class SeriesAdapter(private val listener: OnItemClickListener)
     }
 
     interface OnItemClickListener {
-        fun onSeriesItemClick(item: Series)
+        fun onSeriesItemClick(item: SeriesModel)
     }
 }

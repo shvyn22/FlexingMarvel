@@ -8,11 +8,11 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import shvyn22.marvelapplication.MarvelApplication.Companion.CHARACTER_COMPARATOR
 import shvyn22.marvelapplication.R
-import shvyn22.marvelapplication.data.entity.MarvelCharacter
+import shvyn22.marvelapplication.data.model.CharacterModel
 import shvyn22.marvelapplication.databinding.ItemMainBinding
 
 class CharactersPagingAdapter(private val listener: OnItemClickListener)
-    : PagingDataAdapter<MarvelCharacter, CharactersPagingAdapter.CharacterViewHolder>(CHARACTER_COMPARATOR) {
+    : PagingDataAdapter<CharacterModel, CharactersPagingAdapter.CharacterViewHolder>(CHARACTER_COMPARATOR) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterViewHolder {
         return CharacterViewHolder(ItemMainBinding.inflate(
@@ -38,7 +38,7 @@ class CharactersPagingAdapter(private val listener: OnItemClickListener)
             }
         }
 
-        fun bind(item: MarvelCharacter) {
+        fun bind(item: CharacterModel) {
             binding.apply {
                 Glide.with(itemView)
                     .load(item.thumbnail.getFullUrl())
@@ -53,6 +53,6 @@ class CharactersPagingAdapter(private val listener: OnItemClickListener)
     }
 
     interface OnItemClickListener {
-        fun onItemClick(item: MarvelCharacter)
+        fun onItemClick(item: CharacterModel)
     }
 }

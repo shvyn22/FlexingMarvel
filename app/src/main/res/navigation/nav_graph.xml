@@ -45,7 +45,7 @@
             app:destination="@id/detailsEventFragment" />
         <argument
             android:name="character"
-            app:argType="shvyn22.marvelapplication.data.entity.MarvelCharacter" />
+            app:argType="shvyn22.marvelapplication.data.model.CharacterModel" />
     </fragment>
     <fragment
         android:id="@+id/detailsSeriesFragment"
@@ -60,7 +60,7 @@
             app:destination="@id/detailsCharacterFragment" />
         <argument
             android:name="series"
-            app:argType="shvyn22.marvelapplication.data.entity.Series" />
+            app:argType="shvyn22.marvelapplication.data.model.SeriesModel" />
     </fragment>
     <fragment
         android:id="@+id/detailsEventFragment"
@@ -75,6 +75,6 @@
             app:destination="@id/detailsCharacterFragment" />
         <argument
             android:name="event"
-            app:argType="shvyn22.marvelapplication.data.entity.Event" />
+            app:argType="shvyn22.marvelapplication.data.model.EventModel" />
     </fragment>
 </navigation>

@@ -9,10 +9,10 @@ import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import shvyn22.marvelapplication.api.ApiInterface
-import shvyn22.marvelapplication.data.AppDatabase
-import shvyn22.marvelapplication.data.dao.CharacterDao
-import shvyn22.marvelapplication.data.dao.EventDao
-import shvyn22.marvelapplication.data.dao.SeriesDao
+import shvyn22.marvelapplication.data.local.AppDatabase
+import shvyn22.marvelapplication.data.local.dao.CharacterDao
+import shvyn22.marvelapplication.data.local.dao.EventDao
+import shvyn22.marvelapplication.data.local.dao.SeriesDao
 import javax.inject.Singleton
 
 @Module

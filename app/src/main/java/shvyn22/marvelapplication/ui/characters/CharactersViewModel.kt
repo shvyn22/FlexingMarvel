@@ -8,13 +8,13 @@ import androidx.paging.cachedIn
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import shvyn22.marvelapplication.data.AppRepository
+import shvyn22.marvelapplication.data.repository.RemoteRepository
 import shvyn22.marvelapplication.data.PreferencesManager
-import shvyn22.marvelapplication.data.dao.CharacterDao
-import shvyn22.marvelapplication.data.entity.MarvelCharacter
+import shvyn22.marvelapplication.data.local.dao.CharacterDao
+import shvyn22.marvelapplication.data.model.CharacterModel
 
 class CharactersViewModel @ViewModelInject constructor(
-    private val repository: AppRepository,
+    private val repository: RemoteRepository,
     private val characterDao: CharacterDao,
     private val prefsManager: PreferencesManager,
     @Assisted val state: SavedStateHandle
@@ -40,7 +40,7 @@ class CharactersViewModel @ViewModelInject constructor(
         searchQuery.value = query
     }
 
-    fun onItemClick(item: MarvelCharacter) = viewModelScope.launch {
+    fun onItemClick(item: CharacterModel) = viewModelScope.launch {
         characterEventChannel.send(CharacterEvent.NavigateToDetails(item))
     }
 
@@ -54,6 +54,6 @@ class CharactersViewModel @ViewModelInject constructor(
     }
 
     sealed class CharacterEvent {
-        data class NavigateToDetails(val item: MarvelCharacter) : CharacterEvent()
+        data class NavigateToDetails(val item: CharacterModel) : CharacterEvent()
     }
 }

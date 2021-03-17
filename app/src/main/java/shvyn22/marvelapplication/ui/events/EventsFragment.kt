@@ -19,7 +19,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import shvyn22.marvelapplication.R
-import shvyn22.marvelapplication.data.entity.Event
+import shvyn22.marvelapplication.data.model.EventModel
 import shvyn22.marvelapplication.databinding.FragmentEventsBinding
 import shvyn22.marvelapplication.ui.adapters.EventAdapter
 import shvyn22.marvelapplication.ui.adapters.PagingLoadStateAdapter
@@ -123,11 +123,11 @@ class EventsFragment : Fragment(R.layout.fragment_events),
         navBar?.visibility = View.VISIBLE
     }
 
-    override fun onItemClick(item: Event) {
+    override fun onItemClick(item: EventModel) {
         viewModel.onItemClick(item)
     }
 
-    override fun onEventItemClick(item: Event) {
+    override fun onEventItemClick(item: EventModel) {
         viewModel.onItemClick(item)
     }
 

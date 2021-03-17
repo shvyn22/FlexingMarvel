@@ -8,12 +8,12 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import shvyn22.marvelapplication.api.ApiInterface
-import shvyn22.marvelapplication.data.dao.CharacterDao
-import shvyn22.marvelapplication.data.dao.EventDao
-import shvyn22.marvelapplication.data.dao.SeriesDao
-import shvyn22.marvelapplication.data.entity.Event
-import shvyn22.marvelapplication.data.entity.MarvelCharacter
-import shvyn22.marvelapplication.data.entity.Series
+import shvyn22.marvelapplication.data.local.dao.CharacterDao
+import shvyn22.marvelapplication.data.local.dao.EventDao
+import shvyn22.marvelapplication.data.local.dao.SeriesDao
+import shvyn22.marvelapplication.data.model.EventModel
+import shvyn22.marvelapplication.data.model.CharacterModel
+import shvyn22.marvelapplication.data.model.SeriesModel
 
 class DetailsViewModel @ViewModelInject constructor(
     private val api : ApiInterface,
@@ -26,9 +26,9 @@ class DetailsViewModel @ViewModelInject constructor(
     var isSeriesFavorite = MutableLiveData<Boolean>()
     var isEventFavorite = MutableLiveData<Boolean>()
 
-    var characters = MutableLiveData<List<MarvelCharacter>>()
-    var series = MutableLiveData<List<Series>>()
-    var events = MutableLiveData<List<Event>>()
+    var characters = MutableLiveData<List<CharacterModel>>()
+    var series = MutableLiveData<List<SeriesModel>>()
+    var events = MutableLiveData<List<EventModel>>()
 
     private val detailsEventChannel = Channel<DetailsEvent>()
     val detailsEvent = detailsEventChannel.receiveAsFlow()
@@ -60,36 +60,36 @@ class DetailsViewModel @ViewModelInject constructor(
         characters.value = api.getEventCharacters(id).data.results
     }
 
-    fun onCharacterItemClick(item: MarvelCharacter) = viewModelScope.launch {
+    fun onCharacterItemClick(item: CharacterModel) = viewModelScope.launch {
         detailsEventChannel.send(DetailsEvent.NavigateToCharacterDetails(item))
     }
 
-    fun onToggleCharacterFavorite(item: MarvelCharacter) = viewModelScope.launch {
+    fun onToggleCharacterFavorite(item: CharacterModel) = viewModelScope.launch {
         if (isCharacterFavorite.value!!) characterDao.delete(item) else characterDao.insert(item)
         isCharacterFavorite.value = !isCharacterFavorite.value!!
     }
 
-    fun onSeriesItemClick(item: Series) = viewModelScope.launch {
+    fun onSeriesItemClick(item: SeriesModel) = viewModelScope.launch {
         detailsEventChannel.send(DetailsEvent.NavigateToSeriesDetails(item))
     }
 
-    fun onToggleSeriesFavorite(item: Series) = viewModelScope.launch {
+    fun onToggleSeriesFavorite(item: SeriesModel) = viewModelScope.launch {
         if (isSeriesFavorite.value!!) seriesDao.delete(item) else seriesDao.insert(item)
         isSeriesFavorite.value = !isSeriesFavorite.value!!
     }
 
-    fun onEventItemClick(item: Event) = viewModelScope.launch {
+    fun onEventItemClick(item: EventModel) = viewModelScope.launch {
         detailsEventChannel.send(DetailsEvent.NavigateToEventDetails(item))
     }
 
-    fun onToggleEventFavorite(item: Event) = viewModelScope.launch {
+    fun onToggleEventFavorite(item: EventModel) = viewModelScope.launch {
         if (isEventFavorite.value!!) eventDao.delete(item) else eventDao.insert(item)
         isEventFavorite.value = !isEventFavorite.value!!
     }
 
     sealed class DetailsEvent {
-        data class NavigateToCharacterDetails(val item: MarvelCharacter) : DetailsEvent()
-        data class NavigateToSeriesDetails(val item: Series) : DetailsEvent()
-        data class NavigateToEventDetails(val item: Event) : DetailsEvent()
+        data class NavigateToCharacterDetails(val item: CharacterModel) : DetailsEvent()
+        data class NavigateToSeriesDetails(val item: SeriesModel) : DetailsEvent()
+        data class NavigateToEventDetails(val item: EventModel) : DetailsEvent()
     }
 }

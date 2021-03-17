@@ -3,14 +3,14 @@ package shvyn22.marvelapplication.data.paging
 import androidx.paging.PagingSource
 import retrofit2.HttpException
 import shvyn22.marvelapplication.api.ApiInterface
-import shvyn22.marvelapplication.data.entity.Event
+import shvyn22.marvelapplication.data.model.EventModel
 import java.io.IOException
 
 class EventPagingSource(
     private val api: ApiInterface,
     private val query: String
-) : PagingSource<Int, Event>() {
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Event> {
+) : PagingSource<Int, EventModel>() {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, EventModel> {
         val position = params.key ?: 1
 
         return try {

@@ -1,4 +1,4 @@
-package shvyn22.marvelapplication.data.entity
+package shvyn22.marvelapplication.data.model
 
 import android.os.Parcelable
 import androidx.room.Entity
@@ -7,7 +7,7 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 @Entity(tableName = "Event")
-data class Event(
+data class EventModel(
     @PrimaryKey val id: Int,
 
     val title: String,

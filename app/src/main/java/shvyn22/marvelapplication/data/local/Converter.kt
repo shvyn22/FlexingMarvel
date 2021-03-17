@@ -1,7 +1,7 @@
-package shvyn22.marvelapplication.data
+package shvyn22.marvelapplication.data.local
 
 import androidx.room.TypeConverter
-import shvyn22.marvelapplication.data.entity.Thumbnail
+import shvyn22.marvelapplication.data.model.Thumbnail
 
 class Converter {
     @TypeConverter
