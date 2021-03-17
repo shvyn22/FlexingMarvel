@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/charactersFragment">
+
+    <fragment
+        android:id="@+id/charactersFragment"
+        android:name="shvyn22.marvelapplication.ui.characters.CharactersFragment"
+        android:label="@string/nav_char"
+        tools:layout="@layout/fragment_characters" >
+        <action
+            android:id="@+id/action_charactersFragment_to_detailsCharacterFragment"
+            app:destination="@id/detailsCharacterFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/seriesFragment"
+        android:name="shvyn22.marvelapplication.ui.series.SeriesFragment"
+        android:label="@string/nav_series"
+        tools:layout="@layout/fragment_series" >
+        <action
+            android:id="@+id/action_seriesFragment_to_detailsSeriesFragment"
+            app:destination="@id/detailsSeriesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/eventsFragment"
+        android:name="shvyn22.marvelapplication.ui.events.EventsFragment"
+        android:label="@string/nav_events"
+        tools:layout="@layout/fragment_events" >
+        <action
+            android:id="@+id/action_eventsFragment_to_detailsEventFragment"
+            app:destination="@id/detailsEventFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailsCharacterFragment"
+        android:name="shvyn22.marvelapplication.ui.details.DetailsCharacterFragment"
+        android:label="@string/nav_details"
+        tools:layout="@layout/fragment_details_character">
+        <action
+            android:id="@+id/action_detailsCharacterFragment_to_detailsSeriesFragment"
+            app:destination="@id/detailsSeriesFragment" />
+        <action
+            android:id="@+id/action_detailsCharacterFragment_to_detailsEventFragment"
+            app:destination="@id/detailsEventFragment" />
+        <argument
+            android:name="character"
+            app:argType="shvyn22.marvelapplication.data.entity.MarvelCharacter" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailsSeriesFragment"
+        android:name="shvyn22.marvelapplication.ui.details.DetailsSeriesFragment"
+        android:label="@string/nav_details"
+        tools:layout="@layout/fragment_details_series">
+        <action
+            android:id="@+id/action_detailsSeriesFragment_to_detailsEventFragment"
+            app:destination="@id/detailsEventFragment" />
+        <action
+            android:id="@+id/action_detailsSeriesFragment_to_detailsCharacterFragment"
+            app:destination="@id/detailsCharacterFragment" />
+        <argument
+            android:name="series"
+            app:argType="shvyn22.marvelapplication.data.entity.Series" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailsEventFragment"
+        android:name="shvyn22.marvelapplication.ui.details.DetailsEventFragment"
+        android:label="@string/nav_details"
+        tools:layout="@layout/fragment_details_events">
+        <action
+            android:id="@+id/action_detailsEventFragment_to_detailsSeriesFragment"
+            app:destination="@id/detailsSeriesFragment" />
+        <action
+            android:id="@+id/action_detailsEventFragment_to_detailsCharacterFragment"
+            app:destination="@id/detailsCharacterFragment" />
+        <argument
+            android:name="event"
+            app:argType="shvyn22.marvelapplication.data.entity.Event" />
+    </fragment>
+</navigation>

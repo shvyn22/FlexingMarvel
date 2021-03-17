@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">MarvelApplication</string>
+    <string name="text_desc">Description: %1$s</string>
+    <string name="text_page_count">Page count: %1$d</string>
+    <string name="text_series_error">No related series found</string>
+    <string name="text_events_error">No related events found</string>
+    <string name="text_characters_error">No related characters found</string>
+    <string name="menu_search">Search</string>
+    <string name="menu_favorite">Favorite</string>
+    <string name="menu_night_mode">Night mode</string>
+    <string name="tag_add">Add to favorite</string>
+    <string name="tag_remove">Remove from favorite</string>
+    <string name="nav_char">Characters</string>
+    <string name="nav_series">Series</string>
+    <string name="nav_events">Events</string>
+    <string name="nav_details">Details</string>
+    <string name="placeholder_title">Title</string>
+    <string name="footer_text">Results could not be loaded</string>
+    <string name="footer_btn">Retry</string>
+    <string name="no_results">No results found for this query</string>
+</resources>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="text_size_default">15sp</dimen>
+    <dimen name="text_size_large">18sp</dimen>
+    <dimen name="text_size_larger">25sp</dimen>
+    <dimen name="padding_item">5dp</dimen>
+    <dimen name="padding_default">10dp</dimen>
+    <dimen name="margin_default">5dp</dimen>
+    <dimen name="margin_large">10dp</dimen>
+</resources>
