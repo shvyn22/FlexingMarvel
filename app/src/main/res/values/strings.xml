@@ -5,6 +5,7 @@
     <string name="text_series_error">No related series found</string>
     <string name="text_events_error">No related events found</string>
     <string name="text_characters_error">No related characters found</string>
+    <string name="text_error_fetching">An error occurred</string>
     <string name="menu_search">Search</string>
     <string name="menu_favorite">Favorite</string>
     <string name="menu_night_mode">Night mode</string>

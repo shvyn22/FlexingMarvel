@@ -35,7 +35,7 @@ class LocalRepository @Inject constructor(
 
     suspend fun isSeriesInLibrary(id: Int) = seriesDao.exists(id)
 
-    suspend fun insertEvent(item: SeriesModel) = seriesDao.insert(item)
+    suspend fun insertSeries(item: SeriesModel) = seriesDao.insert(item)
 
-    suspend fun deleteEvent(item: SeriesModel) = seriesDao.delete(item)
+    suspend fun deleteSeries(item: SeriesModel) = seriesDao.delete(item)
 }

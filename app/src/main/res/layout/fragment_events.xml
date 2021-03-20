@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/colorPrimary"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.events.EventsFragment">
 
     <androidx.recyclerview.widget.RecyclerView
@@ -13,7 +14,7 @@
         android:layout_height="match_parent"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="3"
-        tools:listitem="@layout/item_main"/>
+        tools:listitem="@layout/item_main" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_favorite_events"
@@ -22,7 +23,7 @@
         android:visibility="gone"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="3"
-        tools:listitem="@layout/item_main"/>
+        tools:listitem="@layout/item_main" />
 
     <ProgressBar
         android:id="@+id/progress_bar"

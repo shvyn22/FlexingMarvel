@@ -9,18 +9,19 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import shvyn22.marvelapplication.data.repository.RemoteRepository
-import shvyn22.marvelapplication.data.PreferencesManager
-import shvyn22.marvelapplication.data.local.dao.CharacterDao
+import shvyn22.marvelapplication.data.preferences.PreferencesManager
 import shvyn22.marvelapplication.data.model.CharacterModel
+import shvyn22.marvelapplication.data.repository.LocalRepository
 
 class CharactersViewModel @ViewModelInject constructor(
-    private val repository: RemoteRepository,
-    private val characterDao: CharacterDao,
-    private val prefsManager: PreferencesManager,
-    @Assisted val state: SavedStateHandle
+        private val remoteRepo: RemoteRepository,
+        private val localRepo: LocalRepository,
+        private val prefsManager: PreferencesManager,
+        @Assisted val state: SavedStateHandle
 ): ViewModel() {
 
-    val isShowingFavorite = MutableLiveData<Boolean>()
+    private val _isShowingFavorite = MutableLiveData(false)
+    val isShowingFavorite : LiveData<Boolean> get() = _isShowingFavorite
 
     val nightMode = prefsManager.preferencesFlow.asLiveData()
     private val searchQuery = state.getLiveData("searchCharacter", "")
@@ -29,14 +30,14 @@ class CharactersViewModel @ViewModelInject constructor(
     val characterEvent = characterEventChannel.receiveAsFlow()
 
     val pagingItems = searchQuery.switchMap { query ->
-        repository.getCharactersResults(query).cachedIn(viewModelScope)
+        remoteRepo.getCharactersResults(query).cachedIn(viewModelScope)
     }
 
     val items = searchQuery.switchMap { query ->
-        characterDao.getAll(query).asLiveData()
+        localRepo.getCharacters(query).asLiveData()
     }
 
-    fun searchItems(query: String) {
+    fun searchItems(query: String) = viewModelScope.launch {
         searchQuery.value = query
     }
 
@@ -45,12 +46,14 @@ class CharactersViewModel @ViewModelInject constructor(
     }
 
     fun onToggleMenuButton() {
-        isShowingFavorite.value = !isShowingFavorite.value!!
+        _isShowingFavorite.value = !_isShowingFavorite.value!!
     }
 
     fun onToggleModeIcon() = viewModelScope.launch {
-        prefsManager.updateNightMode(if (nightMode.value?.nightMode == AppCompatDelegate.MODE_NIGHT_YES)
-            AppCompatDelegate.MODE_NIGHT_NO else AppCompatDelegate.MODE_NIGHT_YES)
+        prefsManager.updateNightMode(
+                if (nightMode.value?.nightMode == AppCompatDelegate.MODE_NIGHT_YES)
+                    AppCompatDelegate.MODE_NIGHT_NO
+                else AppCompatDelegate.MODE_NIGHT_YES)
     }
 
     sealed class CharacterEvent {

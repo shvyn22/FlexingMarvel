@@ -18,6 +18,9 @@ import shvyn22.marvelapplication.data.model.SeriesModel
 import shvyn22.marvelapplication.databinding.FragmentDetailsCharacterBinding
 import shvyn22.marvelapplication.ui.adapters.EventAdapter
 import shvyn22.marvelapplication.ui.adapters.SeriesAdapter
+import shvyn22.marvelapplication.util.Resource
+import shvyn22.marvelapplication.util.hide
+import shvyn22.marvelapplication.util.show
 
 @AndroidEntryPoint
 class DetailsCharacterFragment : Fragment(R.layout.fragment_details_character),
@@ -40,6 +43,7 @@ class DetailsCharacterFragment : Fragment(R.layout.fragment_details_character),
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.isCharacterFavorite(item.id)
+            viewModel.getCharacterItems(item.id)
             viewModel.detailsEvent.collect { event ->
                 when (event) {
                     is DetailsViewModel.DetailsEvent.NavigateToEventDetails -> {
@@ -57,27 +61,69 @@ class DetailsCharacterFragment : Fragment(R.layout.fragment_details_character),
         }
 
         binding.apply {
-
-            viewModel.getCharacterItems(item.id)
+            rvEvents.apply {
+                adapter = eventAdapter
+                setHasFixedSize(true)
+            }
 
             viewModel.events.observe(viewLifecycleOwner) {
-                if (it.isNotEmpty()) {
-                    eventAdapter.submitList(it)
-                    rvEvent.apply {
-                        adapter = eventAdapter
-                        setHasFixedSize(true)
+                when (it) {
+                    is Resource.Success -> {
+                        pbEvents.hide()
+                        tvEventsError.hide()
+                        rvEvents.show()
+                        eventAdapter.submitList(it.data)
                     }
-                } else tvEventsError.visibility = View.VISIBLE
+                    is Resource.Empty -> {
+                        pbEvents.hide()
+                        tvEventsError.show()
+                        tvEventsError.text = getString(R.string.text_events_error)
+                        rvEvents.hide()
+                    }
+                    is Resource.Loading -> {
+                        pbEvents.show()
+                        tvEventsError.hide()
+                        rvEvents.hide()
+                    }
+                    is Resource.Error -> {
+                        pbEvents.hide()
+                        tvEventsError.show()
+                        rvEvents.hide()
+                    }
+                }
+            }
+
+            rvSeries.apply {
+                adapter = seriesAdapter
+                setHasFixedSize(true)
             }
 
             viewModel.series.observe(viewLifecycleOwner) {
-                if (it.isNotEmpty()) {
-                    seriesAdapter.submitList(it)
-                    rvSeries.apply {
-                        adapter = seriesAdapter
-                        setHasFixedSize(true)
+                when (it) {
+                    is Resource.Success -> {
+                        pbSeries.hide()
+                        tvSeriesError.hide()
+                        rvSeries.show()
+                        seriesAdapter.submitList(it.data)
                     }
-                } else tvSeriesError.visibility = View.VISIBLE
+                    is Resource.Empty -> {
+                        pbSeries.hide()
+                        tvSeriesError.show()
+                        tvSeriesError.text = getString(R.string.text_series_error)
+                        rvSeries.hide()
+                    }
+                    is Resource.Loading -> {
+                        pbSeries.show()
+                        tvSeriesError.hide()
+                        rvSeries.hide()
+                    }
+                    is Resource.Error -> {
+                        pbSeries.hide()
+                        tvSeriesError.show()
+                        tvSeriesError.text = it.msg
+                        rvSeries.hide()
+                    }
+                }
             }
 
             Glide.with(view)
@@ -88,7 +134,10 @@ class DetailsCharacterFragment : Fragment(R.layout.fragment_details_character),
                 .into(ivDetails)
 
             tvTitle.text = item.name
-            tvDesc.text = getString(R.string.text_desc, item.description)
+            item.description.let {
+                if (it.isEmpty()) tvDesc.hide()
+                else tvDesc.text = getString(R.string.text_desc, it)
+            }
 
             val addTag = getString(R.string.tag_add)
             val addDrawable = R.drawable.ic_not_favorite

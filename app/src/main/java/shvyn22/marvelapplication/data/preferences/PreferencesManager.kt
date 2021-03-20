@@ -1,4 +1,4 @@
-package shvyn22.marvelapplication.data
+package shvyn22.marvelapplication.data.preferences
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate

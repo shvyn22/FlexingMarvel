@@ -37,7 +37,6 @@ class CharactersFragment : Fragment(R.layout.fragment_characters),
         super.onViewCreated(view, savedInstanceState)
 
         _binding = FragmentCharactersBinding.bind(view)
-        viewModel.isShowingFavorite.value = false
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
             (activity as AppCompatActivity).supportActionBar!!.setBackgroundDrawable(
@@ -76,10 +75,6 @@ class CharactersFragment : Fragment(R.layout.fragment_characters),
                     rvFavoriteCharacters.visibility = View.GONE
                     rvCharacters.visibility = View.VISIBLE
                 }
-            }
-
-            viewModel.nightMode.observe(viewLifecycleOwner) {
-                AppCompatDelegate.setDefaultNightMode(it.nightMode)
             }
 
             pagingAdapter.addLoadStateListener { loadState ->
@@ -161,18 +156,23 @@ class CharactersFragment : Fragment(R.layout.fragment_characters),
             override fun onQueryTextChange(newText: String?) = true
         })
 
-        val nightModeItem = menu.findItem(R.id.action_night_mode)
-        nightModeItem.setIcon(if (viewModel.nightMode.value?.nightMode == AppCompatDelegate.MODE_NIGHT_YES)
-            R.drawable.ic_light_mode else R.drawable.ic_night_mode)
+        viewModel.nightMode.observe(viewLifecycleOwner) {
+            AppCompatDelegate.setDefaultNightMode(it.nightMode)
+            menu.findItem(R.id.action_night_mode).setIcon(
+                    if (it.nightMode == AppCompatDelegate.MODE_NIGHT_YES) R.drawable.ic_light_mode
+                    else R.drawable.ic_night_mode)
+        }
+
+        viewModel.isShowingFavorite.observe(viewLifecycleOwner) {
+            menu.findItem(R.id.action_favorite).setIcon(
+                    if (it) R.drawable.ic_browse else R.drawable.ic_favorite
+            )
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_favorite -> {
-                item.apply {
-                    if (viewModel.isShowingFavorite.value!!) setIcon(R.drawable.ic_favorite)
-                    else setIcon(R.drawable.ic_browse)
-                }
                 viewModel.onToggleMenuButton()
                 return true
             }

@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="@dimen/margin_default"
     android:layout_marginVertical="@dimen/margin_default"
+    android:background="@color/colorPrimary"
     android:gravity="center"
     android:orientation="vertical"
-    android:background="@color/colorPrimary"
     android:padding="@dimen/padding_item">
 
     <ImageView
@@ -23,9 +24,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_default"
+        android:ellipsize="end"
         android:gravity="center"
         android:maxLines="2"
-        android:ellipsize="end"
         android:textColor="@color/textColor"
         android:textSize="@dimen/text_size_default"
         tools:text="@string/placeholder_title" />

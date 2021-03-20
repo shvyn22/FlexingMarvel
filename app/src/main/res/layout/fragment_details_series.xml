@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/colorPrimary"
     tools:context=".ui.details.DetailsSeriesFragment">
 
@@ -17,46 +18,46 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:theme="@style/TextDetails"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/iv_details"
-            tools:text="@string/placeholder_title"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/placeholder_title" />
 
         <ImageView
             android:id="@+id/iv_details"
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:scaleType="fitXY"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:src="@tools:sample/backgrounds/scenic"
-            tools:ignore="ContentDescription" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription"
+            tools:src="@tools:sample/backgrounds/scenic" />
 
         <TextView
             android:id="@+id/tv_desc"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textColor="@color/textColor"
             android:layout_marginVertical="@dimen/margin_large"
+            android:textColor="@color/textColor"
             android:textSize="@dimen/text_size_large"
-            app:layout_constraintTop_toBottomOf="@id/iv_details"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:text="@string/text_desc"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_details"
+            tools:text="@string/text_desc" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_library"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:layout_margin="@dimen/margin_default"
             android:backgroundTint="@color/yellow"
+            android:gravity="center"
             android:textColor="@color/textColor"
             android:textSize="@dimen/text_size_large"
-            android:layout_margin="@dimen/margin_default"
-            app:layout_constraintTop_toBottomOf="@id/tv_desc"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:text = "@string/tag_add"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_desc"
+            tools:text="@string/tag_add" />
 
         <TextView
             android:id="@+id/tv_events"
@@ -64,34 +65,53 @@
             android:layout_height="wrap_content"
             android:text="@string/nav_events"
             android:theme="@style/TextDetails"
-            app:layout_constraintTop_toBottomOf="@id/btn_library"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/btn_library" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_event"
+            android:id="@+id/rv_events"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/tv_events"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:orientation="horizontal"
-            tools:listitem="@layout/item_details"/>
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_events"
+            tools:listitem="@layout/item_details" />
 
         <TextView
             android:id="@+id/tv_events_error"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:visibility="gone"
+            android:gravity="center"
+            android:text="@string/text_events_error"
             android:textColor="@color/textColorAccent"
             android:textSize="@dimen/text_size_default"
-            android:text="@string/text_events_error"
-            android:gravity="center"
-            app:layout_constraintStart_toStartOf="parent"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/rv_event"
-            tools:visibility="visible"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_events"
+            tools:visibility="visible" />
+
+        <ProgressBar
+            android:id="@+id/pb_events"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/textColorAccent"
+            android:indeterminateTintMode="src_atop"
+            android:progressTint="@color/red"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_events" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier_events"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="rv_events,pb_events,tv_events_error" />
 
         <TextView
             android:id="@+id/tv_characters"
@@ -99,33 +119,45 @@
             android:layout_height="wrap_content"
             android:text="@string/nav_char"
             android:theme="@style/TextDetails"
-            app:layout_constraintTop_toBottomOf="@id/tv_events_error"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/barrier_events" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_characters"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/tv_characters"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:orientation="horizontal"
-            tools:listitem="@layout/item_details"/>
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_characters"
+            tools:listitem="@layout/item_details" />
 
         <TextView
             android:id="@+id/tv_characters_error"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:visibility="gone"
+            android:gravity="center"
+            android:text="@string/text_characters_error"
             android:textColor="@color/textColorAccent"
             android:textSize="@dimen/text_size_default"
-            android:text="@string/text_characters_error"
-            android:gravity="center"
-            app:layout_constraintStart_toStartOf="parent"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/rv_characters"
-            tools:visibility="visible"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_characters"
+            tools:visibility="visible" />
+
+        <ProgressBar
+            android:id="@+id/pb_characters"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/textColorAccent"
+            android:indeterminateTintMode="src_atop"
+            android:progressTint="@color/red"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_characters" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
