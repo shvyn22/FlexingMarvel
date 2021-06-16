@@ -8,20 +8,27 @@ import androidx.paging.LoadStateAdapter
 import androidx.recyclerview.widget.RecyclerView
 import shvyn22.marvelapplication.databinding.FooterLoadStateBinding
 
-class PagingLoadStateAdapter(private val retry: () -> Unit)
-    : LoadStateAdapter<PagingLoadStateAdapter.PagingViewHolder>()  {
+class PagingLoadStateAdapter(
+    private val retry: () -> Unit
+) : LoadStateAdapter<PagingLoadStateAdapter.PagingViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, loadState: LoadState): PagingViewHolder {
-        return PagingViewHolder(FooterLoadStateBinding.inflate(
-                LayoutInflater.from(parent.context), parent, false))
+        return PagingViewHolder(
+            FooterLoadStateBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
     }
 
     override fun onBindViewHolder(holder: PagingViewHolder, loadState: LoadState) {
         holder.bind(loadState)
     }
 
-    inner class PagingViewHolder(private val binding: FooterLoadStateBinding)
-        : RecyclerView.ViewHolder(binding.root) {
+    inner class PagingViewHolder(
+        private val binding: FooterLoadStateBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
 
         init {
             binding.btnRetry.setOnClickListener { retry.invoke() }

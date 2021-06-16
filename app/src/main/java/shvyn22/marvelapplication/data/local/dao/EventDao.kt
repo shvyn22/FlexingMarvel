@@ -5,7 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
-import shvyn22.marvelapplication.data.model.EventModel
+import shvyn22.marvelapplication.data.local.model.EventModel
 
 @Dao
 interface EventDao {
@@ -14,7 +14,7 @@ interface EventDao {
     fun getAll(query: String) : Flow<List<EventModel>>
 
     @Query("SELECT EXISTS (SELECT 1 FROM Event WHERE id = :id)")
-    suspend fun exists(id: Int) : Boolean
+    fun exists(id: Int) : Flow<Boolean>
 
     @Insert
     suspend fun insert(item: EventModel)

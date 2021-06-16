@@ -1,4 +1,4 @@
-package shvyn22.marvelapplication.data.model
+package shvyn22.marvelapplication.data.local.model
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

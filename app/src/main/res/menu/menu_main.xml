@@ -3,20 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_search"
-        android:title="@string/menu_search"
         android:icon="@drawable/ic_search"
+        android:title="@string/menu_search"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
-        app:showAsAction="ifRoom|collapseActionView"/>
+        app:showAsAction="ifRoom|collapseActionView" />
 
     <item
         android:id="@+id/action_favorite"
-        android:title="@string/menu_favorite"
         android:icon="@drawable/ic_favorite"
-        app:showAsAction="ifRoom"/>
+        android:title="@string/menu_favorite"
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_night_mode"
-        android:title="@string/menu_night_mode"
         android:icon="@drawable/ic_night_mode"
-        app:showAsAction="ifRoom"/>
+        android:title="@string/menu_night_mode"
+        app:showAsAction="ifRoom" />
 </menu>

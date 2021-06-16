@@ -3,9 +3,9 @@ package shvyn22.marvelapplication
 import android.app.Application
 import androidx.recyclerview.widget.DiffUtil
 import dagger.hilt.android.HiltAndroidApp
-import shvyn22.marvelapplication.data.model.EventModel
-import shvyn22.marvelapplication.data.model.CharacterModel
-import shvyn22.marvelapplication.data.model.SeriesModel
+import shvyn22.marvelapplication.data.local.model.EventModel
+import shvyn22.marvelapplication.data.local.model.CharacterModel
+import shvyn22.marvelapplication.data.local.model.SeriesModel
 
 @HiltAndroidApp
 class MarvelApplication : Application() {

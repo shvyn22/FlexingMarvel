@@ -1,32 +1,31 @@
 package shvyn22.marvelapplication.ui.characters
 
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import shvyn22.marvelapplication.R
-import shvyn22.marvelapplication.data.model.CharacterModel
+import shvyn22.marvelapplication.data.local.model.CharacterModel
 import shvyn22.marvelapplication.databinding.FragmentCharactersBinding
-import shvyn22.marvelapplication.ui.adapters.CharacterAdapter
 import shvyn22.marvelapplication.ui.adapters.PagingLoadStateAdapter
+import shvyn22.marvelapplication.ui.adapters.character.CharactersAdapter
+import shvyn22.marvelapplication.ui.adapters.character.CharactersPagingAdapter
+import shvyn22.marvelapplication.util.MainStateEvent
+import shvyn22.marvelapplication.util.collectOnLifecycle
+import shvyn22.marvelapplication.util.recolorAppBar
+import shvyn22.marvelapplication.util.showBottomBar
 
 @AndroidEntryPoint
-class CharactersFragment : Fragment(R.layout.fragment_characters),
-        CharactersPagingAdapter.OnItemClickListener, CharacterAdapter.OnItemClickListener {
+class CharactersFragment : Fragment(R.layout.fragment_characters) {
 
     private val viewModel: CharactersViewModel by viewModels()
 
@@ -38,43 +37,29 @@ class CharactersFragment : Fragment(R.layout.fragment_characters),
 
         _binding = FragmentCharactersBinding.bind(view)
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            (activity as AppCompatActivity).supportActionBar!!.setBackgroundDrawable(
-                    ColorDrawable(resources.getColor(R.color.blue, activity?.theme)))
-        }
+        activity?.recolorAppBar(R.color.blue)
 
-        val pagingAdapter = CharactersPagingAdapter(this)
+        val pagingAdapter = CharactersPagingAdapter { viewModel.onItemClick(it) }
         viewModel.pagingItems.observe(viewLifecycleOwner) {
             pagingAdapter.submitData(viewLifecycleOwner.lifecycle, it)
         }
 
-        val characterAdapter = CharacterAdapter(this)
+        val characterAdapter = CharactersAdapter { viewModel.onItemClick(it) }
         viewModel.items.observe(viewLifecycleOwner) {
             characterAdapter.submitList(it)
         }
 
         binding.apply {
-            rvCharacters.apply {
-                adapter = pagingAdapter.withLoadStateHeaderAndFooter(
-                    header = PagingLoadStateAdapter { pagingAdapter.retry() },
-                    footer = PagingLoadStateAdapter { pagingAdapter.retry() }
-                )
-                setHasFixedSize(true)
-            }
+            rvCharacters.adapter = pagingAdapter.withLoadStateHeaderAndFooter(
+                header = PagingLoadStateAdapter { pagingAdapter.retry() },
+                footer = PagingLoadStateAdapter { pagingAdapter.retry() }
+            )
 
-            rvFavoriteCharacters.apply {
-                adapter = characterAdapter
-                setHasFixedSize(true)
-            }
+            rvFavoriteCharacters.adapter = characterAdapter
 
             viewModel.isShowingFavorite.observe(viewLifecycleOwner) {
-                if (it) {
-                    rvCharacters.visibility = View.GONE
-                    rvFavoriteCharacters.visibility = View.VISIBLE
-                } else {
-                    rvFavoriteCharacters.visibility = View.GONE
-                    rvCharacters.visibility = View.VISIBLE
-                }
+                rvFavoriteCharacters.isVisible = it
+                rvCharacters.isVisible = !it
             }
 
             pagingAdapter.addLoadStateListener { loadState ->
@@ -85,7 +70,8 @@ class CharactersFragment : Fragment(R.layout.fragment_characters),
                     btnRetry.isVisible = loadState.source.refresh is LoadState.Error
 
                     if (loadState.source.refresh is LoadState.NotLoading &&
-                            loadState.append.endOfPaginationReached && pagingAdapter.itemCount < 1) {
+                        loadState.append.endOfPaginationReached && pagingAdapter.itemCount < 1
+                    ) {
                         rvCharacters.isVisible = false
                         tvEmpty.isVisible = true
                     } else {
@@ -95,15 +81,11 @@ class CharactersFragment : Fragment(R.layout.fragment_characters),
             }
         }
 
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.characterEvent.collect { event ->
-                when (event) {
-                    is CharactersViewModel.CharacterEvent.NavigateToDetails -> {
-                        val action = CharactersFragmentDirections
-                                .actionCharactersFragmentToDetailsCharacterFragment(event.item)
-                        findNavController().navigate(action)
-                    }
-                }
+        viewModel.characterEvent.collectOnLifecycle(viewLifecycleOwner) { event ->
+            if (event is MainStateEvent.NavigateToDetails<CharacterModel>) {
+                val action = CharactersFragmentDirections
+                    .actionCharactersFragmentToDetailsCharacterFragment(event.item)
+                findNavController().navigate(action)
             }
         }
 
@@ -113,16 +95,7 @@ class CharactersFragment : Fragment(R.layout.fragment_characters),
     override fun onResume() {
         super.onResume()
 
-        val navBar = activity?.findViewById<BottomNavigationView>(R.id.bottom_nav_view)
-        navBar?.visibility = View.VISIBLE
-    }
-
-    override fun onItemClick(item: CharacterModel) {
-        viewModel.onItemClick(item)
-    }
-
-    override fun onCharacterItemClick(item: CharacterModel) {
-        viewModel.onItemClick(item)
+        activity?.showBottomBar()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -133,7 +106,7 @@ class CharactersFragment : Fragment(R.layout.fragment_characters),
         val searchItem = menu.findItem(R.id.action_search)
         val searchView = searchItem.actionView as SearchView
 
-        searchItem.setOnActionExpandListener(object: MenuItem.OnActionExpandListener {
+        searchItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
             override fun onMenuItemActionExpand(p0: MenuItem?) = true
 
             override fun onMenuItemActionCollapse(p0: MenuItem?): Boolean {
@@ -157,29 +130,24 @@ class CharactersFragment : Fragment(R.layout.fragment_characters),
         })
 
         viewModel.nightMode.observe(viewLifecycleOwner) {
-            AppCompatDelegate.setDefaultNightMode(it.nightMode)
+            AppCompatDelegate.setDefaultNightMode(it)
             menu.findItem(R.id.action_night_mode).setIcon(
-                    if (it.nightMode == AppCompatDelegate.MODE_NIGHT_YES) R.drawable.ic_light_mode
-                    else R.drawable.ic_night_mode)
+                if (it == AppCompatDelegate.MODE_NIGHT_YES) R.drawable.ic_light_mode
+                else R.drawable.ic_night_mode
+            )
         }
 
         viewModel.isShowingFavorite.observe(viewLifecycleOwner) {
             menu.findItem(R.id.action_favorite).setIcon(
-                    if (it) R.drawable.ic_browse else R.drawable.ic_favorite
+                if (it) R.drawable.ic_browse else R.drawable.ic_favorite
             )
         }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_favorite -> {
-                viewModel.onToggleMenuButton()
-                return true
-            }
-            R.id.action_night_mode -> {
-                viewModel.onToggleModeIcon()
-                return true
-            }
+            R.id.action_favorite -> viewModel.onToggleFavoriteButton()
+            R.id.action_night_mode -> viewModel.onToggleModeIcon()
         }
         return super.onOptionsItemSelected(item)
     }

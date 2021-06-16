@@ -21,30 +21,32 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit() : Retrofit = Retrofit.Builder()
-                .baseUrl(ApiInterface.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
+    fun provideRetrofit(): Retrofit = Retrofit.Builder()
+        .baseUrl(ApiInterface.BASE_URL)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
 
     @Provides
     @Singleton
-    fun provideApiInterface(retrofit: Retrofit) : ApiInterface =
-            retrofit.create(ApiInterface::class.java)
+    fun provideApiInterface(retrofit: Retrofit): ApiInterface =
+        retrofit.create(ApiInterface::class.java)
 
     @Provides
     @Singleton
-    fun provideDatabase(app: Application) : AppDatabase =
-            Room.databaseBuilder(app, AppDatabase::class.java, "appDatabase").build()
+    fun provideDatabase(app: Application): AppDatabase =
+        Room
+            .databaseBuilder(app, AppDatabase::class.java, "appDatabase")
+            .build()
 
     @Provides
-    fun provideCharacterDao(db: AppDatabase) : CharacterDao =
-            db.characterDao()
+    fun provideCharacterDao(db: AppDatabase): CharacterDao =
+        db.characterDao()
 
     @Provides
-    fun provideEventDao(db: AppDatabase) : EventDao =
-            db.eventDao()
+    fun provideEventDao(db: AppDatabase): EventDao =
+        db.eventDao()
 
     @Provides
-    fun provideSeriesDao(db: AppDatabase) : SeriesDao =
-            db.seriesDao()
+    fun provideSeriesDao(db: AppDatabase): SeriesDao =
+        db.seriesDao()
 }

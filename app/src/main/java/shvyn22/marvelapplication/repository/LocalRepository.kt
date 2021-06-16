@@ -1,11 +1,11 @@
-package shvyn22.marvelapplication.data.repository
+package shvyn22.marvelapplication.repository
 
 import shvyn22.marvelapplication.data.local.dao.CharacterDao
 import shvyn22.marvelapplication.data.local.dao.EventDao
 import shvyn22.marvelapplication.data.local.dao.SeriesDao
-import shvyn22.marvelapplication.data.model.EventModel
-import shvyn22.marvelapplication.data.model.CharacterModel
-import shvyn22.marvelapplication.data.model.SeriesModel
+import shvyn22.marvelapplication.data.local.model.EventModel
+import shvyn22.marvelapplication.data.local.model.CharacterModel
+import shvyn22.marvelapplication.data.local.model.SeriesModel
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -17,23 +17,25 @@ class LocalRepository @Inject constructor(
 ){
     fun getCharacters(query: String) = characterDao.getAll(query)
 
-    suspend fun isCharacterInLibrary(id: Int) = characterDao.exists(id)
+    fun isCharacterFavorite(id: Int) = characterDao.exists(id)
 
     suspend fun insertCharacter(item: CharacterModel) = characterDao.insert(item)
 
     suspend fun deleteCharacter(item: CharacterModel) = characterDao.delete(item)
 
+
     fun getEvents(query: String) = eventDao.getAll(query)
 
-    suspend fun isEventInLibrary(id: Int) = eventDao.exists(id)
+    fun isEventFavorite(id: Int) = eventDao.exists(id)
 
     suspend fun insertEvent(item: EventModel) = eventDao.insert(item)
 
     suspend fun deleteEvent(item: EventModel) = eventDao.delete(item)
 
+
     fun getSeries(query: String) = seriesDao.getAll(query)
 
-    suspend fun isSeriesInLibrary(id: Int) = seriesDao.exists(id)
+    fun isSeriesFavorite(id: Int) = seriesDao.exists(id)
 
     suspend fun insertSeries(item: SeriesModel) = seriesDao.insert(item)
 

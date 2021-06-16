@@ -3,7 +3,7 @@ package shvyn22.marvelapplication.data.paging
 import androidx.paging.PagingSource
 import retrofit2.HttpException
 import shvyn22.marvelapplication.api.ApiInterface
-import shvyn22.marvelapplication.data.model.CharacterModel
+import shvyn22.marvelapplication.data.local.model.CharacterModel
 import java.io.IOException
 
 class CharacterPagingSource(
@@ -16,8 +16,10 @@ class CharacterPagingSource(
 
         return try {
             val offset = (position - 1) * ApiInterface.LIMIT
+
             val response = if (query.isEmpty()) api.getCharacters(offset) else
-                        api.getCharactersByName(query,offset)
+                api.getCharactersByName(query, offset)
+
             val items = response.data.results
 
             LoadResult.Page(

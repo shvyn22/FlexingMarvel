@@ -5,7 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
-import shvyn22.marvelapplication.data.model.SeriesModel
+import shvyn22.marvelapplication.data.local.model.SeriesModel
 
 @Dao
 interface SeriesDao {
@@ -14,7 +14,7 @@ interface SeriesDao {
     fun getAll(query: String) : Flow<List<SeriesModel>>
 
     @Query("SELECT EXISTS (SELECT 1 FROM Series WHERE id = :id)")
-    suspend fun exists(id: Int) : Boolean
+    fun exists(id: Int) : Flow<Boolean>
 
     @Insert
     suspend fun insert(item: SeriesModel)

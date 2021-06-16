@@ -1,80 +1,65 @@
 package shvyn22.marvelapplication.ui.series
 
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import shvyn22.marvelapplication.R
-import shvyn22.marvelapplication.data.model.SeriesModel
+import shvyn22.marvelapplication.data.local.model.SeriesModel
 import shvyn22.marvelapplication.databinding.FragmentSeriesBinding
 import shvyn22.marvelapplication.ui.adapters.PagingLoadStateAdapter
-import shvyn22.marvelapplication.ui.adapters.SeriesAdapter
+import shvyn22.marvelapplication.ui.adapters.series.SeriesAdapter
+import shvyn22.marvelapplication.ui.adapters.series.SeriesPagingAdapter
+import shvyn22.marvelapplication.util.MainStateEvent
+import shvyn22.marvelapplication.util.collectOnLifecycle
+import shvyn22.marvelapplication.util.recolorAppBar
+import shvyn22.marvelapplication.util.showBottomBar
 
 @AndroidEntryPoint
-class SeriesFragment : Fragment(R.layout.fragment_series),
-        SeriesPagingAdapter.OnItemClickListener, SeriesAdapter.OnItemClickListener {
+class SeriesFragment : Fragment(R.layout.fragment_series) {
 
-    private val viewModel : SeriesViewModel by viewModels()
+    private val viewModel: SeriesViewModel by viewModels()
 
-    private var _binding : FragmentSeriesBinding? = null
+    private var _binding: FragmentSeriesBinding? = null
     private val binding get() = _binding!!
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            (activity as AppCompatActivity).supportActionBar!!.setBackgroundDrawable(
-                    ColorDrawable(resources.getColor(R.color.yellow, activity?.theme)))
-        }
-
         _binding = FragmentSeriesBinding.bind(view)
 
-        val pagingAdapter = SeriesPagingAdapter(this)
+        activity?.recolorAppBar(R.color.yellow)
+
+        val pagingAdapter = SeriesPagingAdapter { viewModel.onItemClick(it) }
         viewModel.pagingItems.observe(viewLifecycleOwner) {
             pagingAdapter.submitData(viewLifecycleOwner.lifecycle, it)
         }
 
-        val seriesAdapter = SeriesAdapter(this)
+        val seriesAdapter = SeriesAdapter { viewModel.onItemClick(it) }
         viewModel.items.observe(viewLifecycleOwner) {
             seriesAdapter.submitList(it)
         }
 
         binding.apply {
-            rvSeries.apply {
-                adapter = pagingAdapter.withLoadStateHeaderAndFooter(
-                    header = PagingLoadStateAdapter { pagingAdapter.retry() },
-                    footer = PagingLoadStateAdapter { pagingAdapter.retry() }
-                )
-                setHasFixedSize(true)
-            }
+            rvSeries.adapter = pagingAdapter.withLoadStateHeaderAndFooter(
+                header = PagingLoadStateAdapter { pagingAdapter.retry() },
+                footer = PagingLoadStateAdapter { pagingAdapter.retry() }
+            )
 
-            rvFavoriteSeries.apply {
-                adapter = seriesAdapter
-                setHasFixedSize(true)
-            }
+            rvFavoriteSeries.adapter = seriesAdapter
 
             viewModel.isShowingFavorite.observe(viewLifecycleOwner) {
-                if (it) {
-                    rvSeries.visibility = View.GONE
-                    rvFavoriteSeries.visibility = View.VISIBLE
-                } else {
-                    rvFavoriteSeries.visibility = View.GONE
-                    rvSeries.visibility = View.VISIBLE
-                }
+                rvFavoriteSeries.isVisible = it
+                rvSeries.isVisible = !it
             }
 
             pagingAdapter.addLoadStateListener { loadState ->
@@ -85,7 +70,8 @@ class SeriesFragment : Fragment(R.layout.fragment_series),
                     btnRetry.isVisible = loadState.source.refresh is LoadState.Error
 
                     if (loadState.source.refresh is LoadState.NotLoading &&
-                            loadState.append.endOfPaginationReached && pagingAdapter.itemCount < 1) {
+                        loadState.append.endOfPaginationReached && pagingAdapter.itemCount < 1
+                    ) {
                         rvSeries.isVisible = false
                         tvEmpty.isVisible = true
                     } else {
@@ -95,15 +81,11 @@ class SeriesFragment : Fragment(R.layout.fragment_series),
             }
         }
 
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.seriesEvent.collect { event ->
-                when (event) {
-                    is SeriesViewModel.SeriesEvent.NavigateToDetails -> {
-                        val action = SeriesFragmentDirections
-                                .actionSeriesFragmentToDetailsSeriesFragment(event.item)
-                        findNavController().navigate(action)
-                    }
-                }
+        viewModel.seriesEvent.collectOnLifecycle(viewLifecycleOwner) { event ->
+            if (event is MainStateEvent.NavigateToDetails<SeriesModel>) {
+                val action = SeriesFragmentDirections
+                    .actionSeriesFragmentToDetailsSeriesFragment(event.item)
+                findNavController().navigate(action)
             }
         }
 
@@ -113,16 +95,7 @@ class SeriesFragment : Fragment(R.layout.fragment_series),
     override fun onResume() {
         super.onResume()
 
-        val navBar = activity?.findViewById<BottomNavigationView>(R.id.bottom_nav_view)
-        navBar?.visibility = View.VISIBLE
-    }
-
-    override fun onItemClick(item: SeriesModel) {
-        viewModel.onItemClick(item)
-    }
-
-    override fun onSeriesItemClick(item: SeriesModel) {
-        viewModel.onItemClick(item)
+        activity?.showBottomBar()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -133,7 +106,7 @@ class SeriesFragment : Fragment(R.layout.fragment_series),
         val searchItem = menu.findItem(R.id.action_search)
         val searchView = searchItem.actionView as SearchView
 
-        searchItem.setOnActionExpandListener(object: MenuItem.OnActionExpandListener {
+        searchItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
             override fun onMenuItemActionExpand(p0: MenuItem?) = true
 
             override fun onMenuItemActionCollapse(p0: MenuItem?): Boolean {
@@ -157,29 +130,24 @@ class SeriesFragment : Fragment(R.layout.fragment_series),
         })
 
         viewModel.nightMode.observe(viewLifecycleOwner) {
-            AppCompatDelegate.setDefaultNightMode(it.nightMode)
+            AppCompatDelegate.setDefaultNightMode(it)
             menu.findItem(R.id.action_night_mode).setIcon(
-                    if (it.nightMode == AppCompatDelegate.MODE_NIGHT_YES) R.drawable.ic_light_mode
-                    else R.drawable.ic_night_mode)
+                if (it == AppCompatDelegate.MODE_NIGHT_YES) R.drawable.ic_light_mode
+                else R.drawable.ic_night_mode
+            )
         }
 
         viewModel.isShowingFavorite.observe(viewLifecycleOwner) {
             menu.findItem(R.id.action_favorite).setIcon(
-                    if (it) R.drawable.ic_browse else R.drawable.ic_favorite
+                if (it) R.drawable.ic_browse else R.drawable.ic_favorite
             )
         }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_favorite -> {
-                viewModel.onToggleMenuButton()
-                return true
-            }
-            R.id.action_night_mode -> {
-                viewModel.onToggleModeIcon()
-                return true
-            }
+            R.id.action_favorite -> viewModel.onToggleFavoriteButton()
+            R.id.action_night_mode -> viewModel.onToggleModeIcon()
         }
         return super.onOptionsItemSelected(item)
     }

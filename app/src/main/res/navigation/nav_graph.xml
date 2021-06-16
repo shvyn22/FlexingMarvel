@@ -34,7 +34,7 @@
     </fragment>
     <fragment
         android:id="@+id/detailsCharacterFragment"
-        android:name="shvyn22.marvelapplication.ui.details.DetailsCharacterFragment"
+        android:name="shvyn22.marvelapplication.ui.characters.details.DetailsCharacterFragment"
         android:label="@string/nav_details"
         tools:layout="@layout/fragment_details_character">
         <action
@@ -45,11 +45,11 @@
             app:destination="@id/detailsEventFragment" />
         <argument
             android:name="character"
-            app:argType="shvyn22.marvelapplication.data.model.CharacterModel" />
+            app:argType="shvyn22.marvelapplication.data.local.model.CharacterModel" />
     </fragment>
     <fragment
         android:id="@+id/detailsSeriesFragment"
-        android:name="shvyn22.marvelapplication.ui.details.DetailsSeriesFragment"
+        android:name="shvyn22.marvelapplication.ui.series.details.DetailsSeriesFragment"
         android:label="@string/nav_details"
         tools:layout="@layout/fragment_details_series">
         <action
@@ -60,11 +60,11 @@
             app:destination="@id/detailsCharacterFragment" />
         <argument
             android:name="series"
-            app:argType="shvyn22.marvelapplication.data.model.SeriesModel" />
+            app:argType="shvyn22.marvelapplication.data.local.model.SeriesModel" />
     </fragment>
     <fragment
         android:id="@+id/detailsEventFragment"
-        android:name="shvyn22.marvelapplication.ui.details.DetailsEventFragment"
+        android:name="shvyn22.marvelapplication.ui.events.details.DetailsEventFragment"
         android:label="@string/nav_details"
         tools:layout="@layout/fragment_details_events">
         <action
@@ -75,6 +75,6 @@
             app:destination="@id/detailsCharacterFragment" />
         <argument
             android:name="event"
-            app:argType="shvyn22.marvelapplication.data.model.EventModel" />
+            app:argType="shvyn22.marvelapplication.data.local.model.EventModel" />
     </fragment>
 </navigation>
