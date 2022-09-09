@@ -28,5 +28,4 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@color/red"
         android:text="@string/footer_btn" />
-
 </LinearLayout>

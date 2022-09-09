@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
-    tools:context=".ui.characters.CharactersFragment">
+    tools:context=".presentation.characters.CharactersFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_characters"
@@ -25,40 +25,10 @@
         app:spanCount="3"
         tools:listitem="@layout/item_main" />
 
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
+    <include
+        android:id="@+id/panel_load_state"
+        layout="@layout/panel_load_state"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:visibility="gone"
-        tools:visibility="visible" />
-
-    <TextView
-        android:id="@+id/tv_error"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/btn_retry"
-        android:layout_centerHorizontal="true"
-        android:text="@string/footer_text"
-        android:visibility="gone"
-        tools:visibility="visible" />
-
-    <Button
-        android:id="@+id/btn_retry"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="@string/footer_btn"
-        android:visibility="gone"
-        tools:visibility="visible" />
-
-    <TextView
-        android:id="@+id/tv_empty"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="@string/no_results"
-        android:visibility="gone"
-        tools:visibility="visible" />
-
+        android:layout_centerInParent="true" />
 </RelativeLayout>

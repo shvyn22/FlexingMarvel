@@ -26,7 +26,7 @@
         android:layout_marginTop="@dimen/margin_default"
         android:ellipsize="end"
         android:gravity="center"
-        android:maxLines="2"
+        android:maxLines="1"
         android:textColor="@color/textColor"
         android:textSize="@dimen/text_size_default"
         tools:text="@string/placeholder_title" />

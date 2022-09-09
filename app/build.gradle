@@ -12,21 +12,18 @@ def credentialProperty = new Properties()
 credentialProperty.load(new FileInputStream(credentialFile))
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion "30.0.1"
+    compileSdkVersion 32
 
     defaultConfig {
-        applicationId "shvyn22.marvelapplication"
-        minSdkVersion 21
-        targetSdkVersion 30
+        applicationId "shvyn22.flexingmarvel"
+        minSdkVersion 23
+        targetSdkVersion 32
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
         buildConfigField("String", "API_KEY", credentialProperty['API_KEY'])
-        buildConfigField("String", "TS", credentialProperty['TS'])
-        buildConfigField("String", "HASH", credentialProperty['HASH'])
+        buildConfigField("String", "API_TS", credentialProperty['API_TS'])
+        buildConfigField("String", "API_HASH", credentialProperty['API_HASH'])
     }
 
     buildTypes {
@@ -48,25 +45,31 @@ android {
     }
 }
 
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    kotlinOptions.freeCompilerArgs += ["-Xopt-in=kotlin.RequiresOptIn"]
+}
+
 dependencies {
+    // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     implementation "androidx.core:core-ktx:$ktxVersion"
+
+    // AppCompat
     implementation "androidx.appcompat:appcompat:$appCompatVersion"
+
+    // UI
     implementation "com.google.android.material:material:$materialVersion"
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
-    testImplementation "junit:junit:$junitVersion"
-    androidTestImplementation "androidx.test.ext:junit:$testExtJunitVersion"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
 
     // Fragment
     implementation "androidx.fragment:fragment-ktx:$fragmentVersion"
 
-    // Lifecycle + ViewModel & LiveData
+    // Lifecycle
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
 
-    // Navigation Component
+    // Navigation
     implementation "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
     implementation "androidx.navigation:navigation-ui-ktx:$navigationVersion"
 
@@ -79,10 +82,9 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
 
-    // Dagger Hilt
+    // Hilt
     implementation "com.google.dagger:hilt-android:$hiltVersion"
     kapt "com.google.dagger:hilt-android-compiler:$hiltVersion"
-    implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hiltAndroidXVersion"
     kapt "androidx.hilt:hilt-compiler:$hiltAndroidXVersion"
 
     // DataStore
@@ -90,12 +92,11 @@ dependencies {
 
     // Retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.3.1'
-    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okHttpVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
 
-    // Paging 3
-    implementation "androidx.paging:paging-runtime:$pagingVersion"
+    // Paging
+    implementation "androidx.paging:paging-runtime-ktx:$pagingVersion"
 
     // Glide
     implementation "com.github.bumptech.glide:glide:$glideVersion"

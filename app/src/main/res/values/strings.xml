@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MarvelApplication</string>
+    <string name="app_name">FlexingMarvel</string>
     <string name="text_desc">Description: %1$s</string>
     <string name="text_page_count">Page count: %1$d</string>
     <string name="text_series_error">No related series found</string>
