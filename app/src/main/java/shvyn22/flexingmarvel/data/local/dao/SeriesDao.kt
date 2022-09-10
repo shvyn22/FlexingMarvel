@@ -1,5 +1,6 @@
 package shvyn22.flexingmarvel.data.local.dao
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -11,7 +12,7 @@ import shvyn22.flexingmarvel.data.local.model.SeriesModel
 interface SeriesDao {
 
     @Query("SELECT * FROM Series WHERE title LIKE '%' || :query || '%'")
-    fun getSeries(query: String): Flow<List<SeriesModel>>
+    fun getSeries(query: String): PagingSource<Int, SeriesModel>
 
     @Query("SELECT EXISTS (SELECT 1 FROM Series WHERE id = :id)")
     fun isSeriesFavorite(id: Int): Flow<Boolean>

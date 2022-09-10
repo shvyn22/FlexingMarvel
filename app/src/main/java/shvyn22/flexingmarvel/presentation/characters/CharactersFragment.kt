@@ -12,13 +12,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import dagger.hilt.android.AndroidEntryPoint
 import shvyn22.flexingmarvel.R
 import shvyn22.flexingmarvel.data.local.model.CharacterModel
 import shvyn22.flexingmarvel.databinding.FragmentCharactersBinding
 import shvyn22.flexingmarvel.presentation.adapters.PagingLoadStateAdapter
-import shvyn22.flexingmarvel.presentation.adapters.character.CharacterAdapter
 import shvyn22.flexingmarvel.presentation.adapters.character.CharacterPagingAdapter
 import shvyn22.flexingmarvel.util.MainStateEvent
 import shvyn22.flexingmarvel.util.collectOnLifecycle
@@ -30,8 +30,8 @@ class CharactersFragment : Fragment(R.layout.fragment_characters) {
 
     private val viewModel: CharactersViewModel by viewModels()
 
-    private val pagingAdapter = CharacterPagingAdapter { viewModel.onItemClick(it) }
-    private val characterAdapter = CharacterAdapter { viewModel.onItemClick(it) }
+    private val characterAdapter = CharacterPagingAdapter { viewModel.onItemClick(it) }
+    private val favoriteCharacterAdapter = CharacterPagingAdapter { viewModel.onItemClick(it) }
 
     private var _binding: FragmentCharactersBinding? = null
     private val binding get() = _binding!!
@@ -50,23 +50,26 @@ class CharactersFragment : Fragment(R.layout.fragment_characters) {
         activity?.recolorAppBar(R.color.blue)
 
         binding.apply {
-            rvCharacters.adapter = pagingAdapter.withLoadStateHeaderAndFooter(
-                header = PagingLoadStateAdapter(pagingAdapter::retry),
-                footer = PagingLoadStateAdapter(pagingAdapter::retry)
+            rvCharacters.adapter = characterAdapter.withLoadStateHeaderAndFooter(
+                header = PagingLoadStateAdapter(characterAdapter::retry),
+                footer = PagingLoadStateAdapter(characterAdapter::retry)
             )
 
-            rvFavoriteCharacters.adapter = characterAdapter
+            rvFavoriteCharacters.adapter = favoriteCharacterAdapter.withLoadStateHeaderAndFooter(
+                header = PagingLoadStateAdapter(characterAdapter::retry),
+                footer = PagingLoadStateAdapter(characterAdapter::retry)
+            )
 
-            pagingAdapter.addLoadStateListener { loadState ->
+            val loadStateListener: (CombinedLoadStates) -> Unit = { loadState ->
                 if (!rvFavoriteCharacters.isVisible) {
                     panelLoadState.apply {
-                        progressBar.isVisible = loadState.source.refresh is LoadState.Loading
+                        pbLoading.isVisible = loadState.source.refresh is LoadState.Loading
                         rvCharacters.isVisible = loadState.source.refresh is LoadState.NotLoading
                         tvError.isVisible = loadState.source.refresh is LoadState.Error
                         btnRetry.isVisible = loadState.source.refresh is LoadState.Error
 
                         if (loadState.source.refresh is LoadState.NotLoading &&
-                            loadState.append.endOfPaginationReached && pagingAdapter.itemCount < 1
+                            loadState.append.endOfPaginationReached && characterAdapter.itemCount < 1
                         ) {
                             rvCharacters.isVisible = false
                             tvEmpty.isVisible = true
@@ -76,6 +79,9 @@ class CharactersFragment : Fragment(R.layout.fragment_characters) {
                     }
                 }
             }
+
+            characterAdapter.addLoadStateListener(loadStateListener)
+            favoriteCharacterAdapter.addLoadStateListener(loadStateListener)
         }
     }
 
@@ -88,11 +94,11 @@ class CharactersFragment : Fragment(R.layout.fragment_characters) {
         }
 
         viewModel.pagingItems.collectOnLifecycle(viewLifecycleOwner) {
-            pagingAdapter.submitData(viewLifecycleOwner.lifecycle, it)
+            characterAdapter.submitData(viewLifecycleOwner.lifecycle, it)
         }
 
         viewModel.items.collectOnLifecycle(viewLifecycleOwner) {
-            characterAdapter.submitList(it)
+            favoriteCharacterAdapter.submitData(viewLifecycleOwner.lifecycle, it)
         }
 
         viewModel.characterEvent.collectOnLifecycle(viewLifecycleOwner) { event ->

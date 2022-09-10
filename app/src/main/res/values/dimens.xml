@@ -12,4 +12,8 @@
     <!-- Margin -->
     <dimen name="margin_default">5dp</dimen>
     <dimen name="margin_large">10dp</dimen>
+
+    <!-- Size -->
+    <dimen name="size_thumbnail_large">140dp</dimen>
+    <dimen name="size_thumbnail_small">100dp</dimen>
 </resources>

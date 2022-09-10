@@ -1,4 +1,4 @@
-package shvyn22.flexingmarvel.repository.remote
+package shvyn22.flexingmarvel.domain.repository.remote
 
 import androidx.paging.Pager
 import androidx.paging.PagingConfig

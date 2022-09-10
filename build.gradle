@@ -5,7 +5,7 @@ buildscript {
         ktxVersion = "1.8.0"
 
         // AppCompat
-        appCompatVersion = "1.5.0"
+        appCompatVersion = "1.5.1"
 
         // UI
         materialVersion = "1.6.1"
@@ -18,7 +18,7 @@ buildscript {
         lifecycleVersion = "2.5.1"
 
         // Navigation
-        navigationVersion = "2.5.1"
+        navigationVersion = "2.5.2"
 
         // Room
         roomVersion = "2.4.3"

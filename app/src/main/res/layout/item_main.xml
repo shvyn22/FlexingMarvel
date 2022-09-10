@@ -13,10 +13,10 @@
 
     <ImageView
         android:id="@+id/iv_item"
-        android:layout_width="140dp"
-        android:layout_height="150dp"
+        android:layout_width="@dimen/size_thumbnail_large"
+        android:layout_height="@dimen/size_thumbnail_large"
+        android:contentDescription="@string/text_accessibility_thumbnail"
         android:scaleType="fitXY"
-        tools:ignore="ContentDescription"
         tools:src="@tools:sample/backgrounds/scenic" />
 
     <TextView
@@ -29,5 +29,5 @@
         android:maxLines="1"
         android:textColor="@color/textColor"
         android:textSize="@dimen/text_size_default"
-        tools:text="@string/placeholder_title" />
+        tools:text="@string/text_placeholder_title" />
 </LinearLayout>

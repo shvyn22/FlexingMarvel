@@ -12,13 +12,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import dagger.hilt.android.AndroidEntryPoint
 import shvyn22.flexingmarvel.R
 import shvyn22.flexingmarvel.data.local.model.SeriesModel
 import shvyn22.flexingmarvel.databinding.FragmentSeriesBinding
 import shvyn22.flexingmarvel.presentation.adapters.PagingLoadStateAdapter
-import shvyn22.flexingmarvel.presentation.adapters.series.SeriesAdapter
 import shvyn22.flexingmarvel.presentation.adapters.series.SeriesPagingAdapter
 import shvyn22.flexingmarvel.util.MainStateEvent
 import shvyn22.flexingmarvel.util.collectOnLifecycle
@@ -30,8 +30,8 @@ class SeriesFragment : Fragment(R.layout.fragment_series) {
 
     private val viewModel: SeriesViewModel by viewModels()
 
-    private val pagingAdapter = SeriesPagingAdapter { viewModel.onItemClick(it) }
-    private val seriesAdapter = SeriesAdapter { viewModel.onItemClick(it) }
+    private val seriesAdapter = SeriesPagingAdapter { viewModel.onItemClick(it) }
+    private val favoriteSeriesAdapter = SeriesPagingAdapter { viewModel.onItemClick(it) }
 
     private var _binding: FragmentSeriesBinding? = null
     private val binding get() = _binding!!
@@ -50,23 +50,26 @@ class SeriesFragment : Fragment(R.layout.fragment_series) {
         activity?.recolorAppBar(R.color.yellow)
 
         binding.apply {
-            rvSeries.adapter = pagingAdapter.withLoadStateHeaderAndFooter(
-                header = PagingLoadStateAdapter(pagingAdapter::retry),
-                footer = PagingLoadStateAdapter(pagingAdapter::retry)
+            rvSeries.adapter = seriesAdapter.withLoadStateHeaderAndFooter(
+                header = PagingLoadStateAdapter(seriesAdapter::retry),
+                footer = PagingLoadStateAdapter(seriesAdapter::retry)
             )
 
-            rvFavoriteSeries.adapter = seriesAdapter
+            rvFavoriteSeries.adapter = favoriteSeriesAdapter.withLoadStateHeaderAndFooter(
+                header = PagingLoadStateAdapter(seriesAdapter::retry),
+                footer = PagingLoadStateAdapter(seriesAdapter::retry)
+            )
 
-            pagingAdapter.addLoadStateListener { loadState ->
+            val listener: (CombinedLoadStates) -> Unit = { loadState ->
                 if (!rvFavoriteSeries.isVisible) {
                     panelLoadState.apply {
-                        progressBar.isVisible = loadState.source.refresh is LoadState.Loading
+                        pbLoading.isVisible = loadState.source.refresh is LoadState.Loading
                         rvSeries.isVisible = loadState.source.refresh is LoadState.NotLoading
                         tvError.isVisible = loadState.source.refresh is LoadState.Error
                         btnRetry.isVisible = loadState.source.refresh is LoadState.Error
 
                         if (loadState.source.refresh is LoadState.NotLoading &&
-                            loadState.append.endOfPaginationReached && pagingAdapter.itemCount < 1
+                            loadState.append.endOfPaginationReached && seriesAdapter.itemCount < 1
                         ) {
                             rvSeries.isVisible = false
                             tvEmpty.isVisible = true
@@ -76,6 +79,9 @@ class SeriesFragment : Fragment(R.layout.fragment_series) {
                     }
                 }
             }
+
+            seriesAdapter.addLoadStateListener(listener)
+            favoriteSeriesAdapter.addLoadStateListener(listener)
         }
     }
 
@@ -88,11 +94,11 @@ class SeriesFragment : Fragment(R.layout.fragment_series) {
         }
 
         viewModel.pagingItems.collectOnLifecycle(viewLifecycleOwner) {
-            pagingAdapter.submitData(viewLifecycleOwner.lifecycle, it)
+            seriesAdapter.submitData(viewLifecycleOwner.lifecycle, it)
         }
 
         viewModel.items.collectOnLifecycle(viewLifecycleOwner) {
-            seriesAdapter.submitList(it)
+            favoriteSeriesAdapter.submitData(viewLifecycleOwner.lifecycle, it)
         }
 
         viewModel.seriesEvent.collectOnLifecycle(viewLifecycleOwner) { event ->

@@ -1,4 +1,4 @@
-package shvyn22.flexingmarvel.repository.remote
+package shvyn22.flexingmarvel.domain.repository.remote
 
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow

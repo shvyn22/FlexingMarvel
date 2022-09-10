@@ -15,15 +15,20 @@ import kotlinx.coroutines.launch
 import shvyn22.flexingmarvel.data.local.model.CharacterModel
 import shvyn22.flexingmarvel.data.local.model.EventModel
 import shvyn22.flexingmarvel.data.local.model.SeriesModel
-import shvyn22.flexingmarvel.repository.local.LocalRepository
-import shvyn22.flexingmarvel.repository.remote.RemoteRepository
+import shvyn22.flexingmarvel.domain.usecase.character.GetCharactersByTypeUseCase
+import shvyn22.flexingmarvel.domain.usecase.event.DeleteEventUseCase
+import shvyn22.flexingmarvel.domain.usecase.event.InsertEventUseCase
+import shvyn22.flexingmarvel.domain.usecase.event.IsEventFavoriteUseCase
+import shvyn22.flexingmarvel.domain.usecase.series.GetSeriesByTypeUseCase
 import shvyn22.flexingmarvel.util.DetailsStateEvent
 import shvyn22.flexingmarvel.util.Resource
 
 class DetailsEventViewModel @AssistedInject constructor(
-    characterRepo: RemoteRepository<CharacterModel>,
-    seriesRepo: RemoteRepository<SeriesModel>,
-    private val localRepo: LocalRepository<EventModel>,
+    getCharactersByTypeUseCase: GetCharactersByTypeUseCase,
+    getSeriesByTypeUseCase: GetSeriesByTypeUseCase,
+    isEventFavoriteUseCase: IsEventFavoriteUseCase,
+    private val insertEventUseCase: InsertEventUseCase,
+    private val deleteEventUseCase: DeleteEventUseCase,
     @Assisted private val event: EventModel
 ) : ViewModel() {
 
@@ -31,15 +36,15 @@ class DetailsEventViewModel @AssistedInject constructor(
     val detailsEvent = detailsEventChannel.receiveAsFlow()
 
     val characters: StateFlow<Resource<List<CharacterModel>>> =
-        characterRepo.getItemsByType(event)
+        getCharactersByTypeUseCase(event)
             .stateIn(viewModelScope, SharingStarted.Lazily, Resource.Idle())
 
     val series: StateFlow<Resource<List<SeriesModel>>> =
-        seriesRepo.getItemsByType(event)
+        getSeriesByTypeUseCase(event)
             .stateIn(viewModelScope, SharingStarted.Lazily, Resource.Idle())
 
     val isEventFavorite: StateFlow<Boolean> =
-        localRepo.isItemFavorite(event.id)
+        isEventFavoriteUseCase(event.id)
             .stateIn(viewModelScope, SharingStarted.Lazily, false)
 
     fun onToggleFavorite() {
@@ -49,13 +54,13 @@ class DetailsEventViewModel @AssistedInject constructor(
 
     private fun insertEvent() {
         viewModelScope.launch {
-            localRepo.insertItem(event)
+            insertEventUseCase(event)
         }
     }
 
     private fun deleteEvent() {
         viewModelScope.launch {
-            localRepo.deleteItem(event)
+            deleteEventUseCase(event)
         }
     }
 

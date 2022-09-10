@@ -8,7 +8,7 @@
     android:padding="@dimen/padding_default">
 
     <ProgressBar
-        android:id="@+id/progress_bar"
+        android:id="@+id/pb_loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:indeterminate="true"
@@ -20,12 +20,12 @@
         android:id="@+id/tv_error"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/footer_text" />
+        android:text="@string/text_footer_error" />
 
     <Button
         android:id="@+id/btn_retry"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/red"
-        android:text="@string/footer_btn" />
+        android:text="@string/text_retry" />
 </LinearLayout>

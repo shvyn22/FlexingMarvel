@@ -11,14 +11,14 @@ import shvyn22.flexingmarvel.data.local.dao.SeriesDao
 import shvyn22.flexingmarvel.data.local.model.CharacterModel
 import shvyn22.flexingmarvel.data.local.model.EventModel
 import shvyn22.flexingmarvel.data.local.model.SeriesModel
-import shvyn22.flexingmarvel.repository.local.CharacterLocalRepository
-import shvyn22.flexingmarvel.repository.local.EventLocalRepository
-import shvyn22.flexingmarvel.repository.local.LocalRepository
-import shvyn22.flexingmarvel.repository.local.SeriesLocalRepository
-import shvyn22.flexingmarvel.repository.remote.CharacterRemoteRepository
-import shvyn22.flexingmarvel.repository.remote.EventRemoteRepository
-import shvyn22.flexingmarvel.repository.remote.RemoteRepository
-import shvyn22.flexingmarvel.repository.remote.SeriesRemoteRepository
+import shvyn22.flexingmarvel.domain.repository.local.CharacterLocalRepository
+import shvyn22.flexingmarvel.domain.repository.local.EventLocalRepository
+import shvyn22.flexingmarvel.domain.repository.local.LocalRepository
+import shvyn22.flexingmarvel.domain.repository.local.SeriesLocalRepository
+import shvyn22.flexingmarvel.domain.repository.remote.CharacterRemoteRepository
+import shvyn22.flexingmarvel.domain.repository.remote.EventRemoteRepository
+import shvyn22.flexingmarvel.domain.repository.remote.RemoteRepository
+import shvyn22.flexingmarvel.domain.repository.remote.SeriesRemoteRepository
 import javax.inject.Singleton
 
 @Module

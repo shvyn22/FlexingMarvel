@@ -15,15 +15,20 @@ import kotlinx.coroutines.launch
 import shvyn22.flexingmarvel.data.local.model.CharacterModel
 import shvyn22.flexingmarvel.data.local.model.EventModel
 import shvyn22.flexingmarvel.data.local.model.SeriesModel
-import shvyn22.flexingmarvel.repository.local.LocalRepository
-import shvyn22.flexingmarvel.repository.remote.RemoteRepository
+import shvyn22.flexingmarvel.domain.usecase.character.DeleteCharacterUseCase
+import shvyn22.flexingmarvel.domain.usecase.character.InsertCharacterUseCase
+import shvyn22.flexingmarvel.domain.usecase.character.IsCharacterFavoriteUseCase
+import shvyn22.flexingmarvel.domain.usecase.event.GetEventsByTypeUseCase
+import shvyn22.flexingmarvel.domain.usecase.series.GetSeriesByTypeUseCase
 import shvyn22.flexingmarvel.util.DetailsStateEvent
 import shvyn22.flexingmarvel.util.Resource
 
 class DetailsCharacterViewModel @AssistedInject constructor(
-    eventRepo: RemoteRepository<EventModel>,
-    seriesRepo: RemoteRepository<SeriesModel>,
-    private val localRepo: LocalRepository<CharacterModel>,
+    getEventsByTypeUseCase: GetEventsByTypeUseCase,
+    getSeriesByTypeUseCase: GetSeriesByTypeUseCase,
+    isCharacterFavoriteUseCase: IsCharacterFavoriteUseCase,
+    private val insertCharacterUseCase: InsertCharacterUseCase,
+    private val deleteCharacterUseCase: DeleteCharacterUseCase,
     @Assisted private val character: CharacterModel
 ) : ViewModel() {
 
@@ -31,15 +36,15 @@ class DetailsCharacterViewModel @AssistedInject constructor(
     val detailsEvent = detailsEventChannel.receiveAsFlow()
 
     val events: StateFlow<Resource<List<EventModel>>> =
-        eventRepo.getItemsByType(character)
+        getEventsByTypeUseCase(character)
             .stateIn(viewModelScope, SharingStarted.Lazily, Resource.Idle())
 
     val series: StateFlow<Resource<List<SeriesModel>>> =
-        seriesRepo.getItemsByType(character)
+        getSeriesByTypeUseCase(character)
             .stateIn(viewModelScope, SharingStarted.Lazily, Resource.Idle())
 
     val isCharacterFavorite: StateFlow<Boolean> =
-        localRepo.isItemFavorite(character.id)
+        isCharacterFavoriteUseCase(character.id)
             .stateIn(viewModelScope, SharingStarted.Lazily, false)
 
     fun onToggleFavorite() {
@@ -49,13 +54,13 @@ class DetailsCharacterViewModel @AssistedInject constructor(
 
     private fun insertCharacter() {
         viewModelScope.launch {
-            localRepo.insertItem(character)
+            insertCharacterUseCase(character)
         }
     }
 
     private fun deleteCharacter() {
         viewModelScope.launch {
-            localRepo.deleteItem(character)
+            deleteCharacterUseCase(character)
         }
     }
 

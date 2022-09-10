@@ -11,8 +11,8 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import shvyn22.flexingmarvel.data.local.model.EventModel
-import shvyn22.flexingmarvel.repository.local.LocalRepository
-import shvyn22.flexingmarvel.repository.remote.RemoteRepository
+import shvyn22.flexingmarvel.domain.usecase.event.GetEventsUseCase
+import shvyn22.flexingmarvel.domain.usecase.event.GetFavoriteEventsUseCase
 import shvyn22.flexingmarvel.util.MainStateEvent
 import shvyn22.flexingmarvel.util.SEARCH_EVENTS_KEY
 import javax.inject.Inject
@@ -20,8 +20,8 @@ import javax.inject.Inject
 @OptIn(FlowPreview::class)
 @HiltViewModel
 class EventsViewModel @Inject constructor(
-    private val remoteRepo: RemoteRepository<EventModel>,
-    private val localRepo: LocalRepository<EventModel>,
+    private val getEventsUseCase: GetEventsUseCase,
+    private val getFavoriteEventsUseCase: GetFavoriteEventsUseCase,
     private val savedState: SavedStateHandle
 ) : ViewModel() {
 
@@ -34,12 +34,12 @@ class EventsViewModel @Inject constructor(
     val event = eventChannel.receiveAsFlow()
 
     val pagingItems = searchQuery.flatMapConcat { query ->
-        remoteRepo.getItems(query).cachedIn(viewModelScope)
+        getEventsUseCase(query).cachedIn(viewModelScope)
     }.stateIn(viewModelScope, SharingStarted.Lazily, PagingData.empty())
 
     val items = searchQuery.flatMapConcat { query ->
-        localRepo.getItems(query)
-    }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+        getFavoriteEventsUseCase(query).cachedIn(viewModelScope)
+    }.stateIn(viewModelScope, SharingStarted.Lazily, PagingData.empty())
 
     fun searchItems(query: String) {
         viewModelScope.launch {

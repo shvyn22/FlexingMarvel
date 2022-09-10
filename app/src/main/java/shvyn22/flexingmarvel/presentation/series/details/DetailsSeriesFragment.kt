@@ -109,12 +109,12 @@ class DetailsSeriesFragment : Fragment(R.layout.fragment_details_series) {
             viewModel.isSeriesFavorite.collectOnLifecycle(viewLifecycleOwner) {
                 btnLibrary.apply {
                     if (it) {
-                        text = getString(R.string.tag_remove)
+                        text = getString(R.string.text_remove_favorite)
                         setCompoundDrawablesWithIntrinsicBounds(
                             R.drawable.ic_favorite, 0, 0, 0
                         )
                     } else {
-                        text = getString(R.string.tag_add)
+                        text = getString(R.string.text_add_favorite)
                         setCompoundDrawablesWithIntrinsicBounds(
                             R.drawable.ic_not_favorite, 0, 0, 0
                         )

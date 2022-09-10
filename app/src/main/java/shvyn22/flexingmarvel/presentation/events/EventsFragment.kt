@@ -12,13 +12,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import dagger.hilt.android.AndroidEntryPoint
 import shvyn22.flexingmarvel.R
 import shvyn22.flexingmarvel.data.local.model.EventModel
 import shvyn22.flexingmarvel.databinding.FragmentEventsBinding
 import shvyn22.flexingmarvel.presentation.adapters.PagingLoadStateAdapter
-import shvyn22.flexingmarvel.presentation.adapters.event.EventAdapter
 import shvyn22.flexingmarvel.presentation.adapters.event.EventPagingAdapter
 import shvyn22.flexingmarvel.util.MainStateEvent
 import shvyn22.flexingmarvel.util.collectOnLifecycle
@@ -30,8 +30,8 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
 
     private val viewModel: EventsViewModel by viewModels()
 
-    private val pagingAdapter = EventPagingAdapter { viewModel.onItemClick(it) }
-    private val eventAdapter = EventAdapter { viewModel.onItemClick(it) }
+    private val eventAdapter = EventPagingAdapter { viewModel.onItemClick(it) }
+    private val favoriteEventAdapter = EventPagingAdapter { viewModel.onItemClick(it) }
 
     private var _binding: FragmentEventsBinding? = null
     private val binding get() = _binding!!
@@ -50,23 +50,26 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         activity?.recolorAppBar(R.color.green)
 
         binding.apply {
-            rvEvents.adapter = pagingAdapter.withLoadStateHeaderAndFooter(
-                header = PagingLoadStateAdapter(pagingAdapter::retry),
-                footer = PagingLoadStateAdapter(pagingAdapter::retry)
+            rvEvents.adapter = eventAdapter.withLoadStateHeaderAndFooter(
+                header = PagingLoadStateAdapter(eventAdapter::retry),
+                footer = PagingLoadStateAdapter(eventAdapter::retry)
             )
 
-            rvFavoriteEvents.adapter = eventAdapter
+            rvFavoriteEvents.adapter = favoriteEventAdapter.withLoadStateHeaderAndFooter(
+                header = PagingLoadStateAdapter(eventAdapter::retry),
+                footer = PagingLoadStateAdapter(eventAdapter::retry)
+            )
 
-            pagingAdapter.addLoadStateListener { loadState ->
+            val listener: (CombinedLoadStates) -> Unit = { loadState ->
                 if (!rvFavoriteEvents.isVisible) {
                     panelLoadState.apply {
-                        progressBar.isVisible = loadState.source.refresh is LoadState.Loading
+                        pbLoading.isVisible = loadState.source.refresh is LoadState.Loading
                         rvEvents.isVisible = loadState.source.refresh is LoadState.NotLoading
                         tvError.isVisible = loadState.source.refresh is LoadState.Error
                         btnRetry.isVisible = loadState.source.refresh is LoadState.Error
 
                         if (loadState.source.refresh is LoadState.NotLoading &&
-                            loadState.append.endOfPaginationReached && pagingAdapter.itemCount < 1
+                            loadState.append.endOfPaginationReached && eventAdapter.itemCount < 1
                         ) {
                             rvEvents.isVisible = false
                             tvEmpty.isVisible = true
@@ -76,6 +79,9 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                     }
                 }
             }
+
+            eventAdapter.addLoadStateListener(listener)
+            favoriteEventAdapter.addLoadStateListener(listener)
         }
     }
 
@@ -88,11 +94,11 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
         }
 
         viewModel.pagingItems.collectOnLifecycle(viewLifecycleOwner) {
-            pagingAdapter.submitData(viewLifecycleOwner.lifecycle, it)
+            eventAdapter.submitData(viewLifecycleOwner.lifecycle, it)
         }
 
         viewModel.items.collectOnLifecycle(viewLifecycleOwner) {
-            eventAdapter.submitList(it)
+            favoriteEventAdapter.submitData(viewLifecycleOwner.lifecycle, it)
         }
 
         viewModel.event.collectOnLifecycle(viewLifecycleOwner) { event ->

@@ -11,8 +11,8 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import shvyn22.flexingmarvel.data.local.model.SeriesModel
-import shvyn22.flexingmarvel.repository.local.LocalRepository
-import shvyn22.flexingmarvel.repository.remote.RemoteRepository
+import shvyn22.flexingmarvel.domain.usecase.series.GetFavoriteSeriesUseCase
+import shvyn22.flexingmarvel.domain.usecase.series.GetSeriesUseCase
 import shvyn22.flexingmarvel.util.MainStateEvent
 import shvyn22.flexingmarvel.util.SEARCH_SERIES_KEY
 import javax.inject.Inject
@@ -20,8 +20,8 @@ import javax.inject.Inject
 @OptIn(FlowPreview::class)
 @HiltViewModel
 class SeriesViewModel @Inject constructor(
-    private val remoteRepo: RemoteRepository<SeriesModel>,
-    private val localRepo: LocalRepository<SeriesModel>,
+    private val getSeriesUseCase: GetSeriesUseCase,
+    private val getFavoriteSeriesUseCase: GetFavoriteSeriesUseCase,
     private val savedState: SavedStateHandle
 ) : ViewModel() {
 
@@ -34,12 +34,12 @@ class SeriesViewModel @Inject constructor(
     val seriesEvent = seriesEventChannel.receiveAsFlow()
 
     val pagingItems = searchQuery.flatMapConcat { query ->
-        remoteRepo.getItems(query).cachedIn(viewModelScope)
+        getSeriesUseCase(query).cachedIn(viewModelScope)
     }.stateIn(viewModelScope, SharingStarted.Lazily, PagingData.empty())
 
     val items = searchQuery.flatMapConcat { query ->
-        localRepo.getItems(query)
-    }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+        getFavoriteSeriesUseCase(query).cachedIn(viewModelScope)
+    }.stateIn(viewModelScope, SharingStarted.Lazily, PagingData.empty())
 
     fun searchItems(query: String) {
         viewModelScope.launch {

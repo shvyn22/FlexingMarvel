@@ -17,20 +17,21 @@
             android:id="@+id/tv_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_large"
             android:theme="@style/TextDetails"
             app:layout_constraintEnd_toStartOf="@id/iv_details"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="@string/placeholder_title" />
+            tools:text="@string/text_placeholder_title" />
 
         <ImageView
             android:id="@+id/iv_details"
             android:layout_width="150dp"
             android:layout_height="150dp"
+            android:contentDescription="@string/text_accessibility_thumbnail"
             android:scaleType="fitXY"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="ContentDescription"
             tools:src="@tools:sample/backgrounds/scenic" />
 
         <TextView
@@ -40,10 +41,17 @@
             android:layout_marginVertical="@dimen/margin_large"
             android:textColor="@color/textColor"
             android:textSize="@dimen/text_size_large"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/tv_title"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/iv_details"
+            app:layout_constraintTop_toBottomOf="@id/tv_title"
             tools:text="@string/text_desc" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="tv_desc,iv_details" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_library"
@@ -56,8 +64,8 @@
             android:textSize="@dimen/text_size_large"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_desc"
-            tools:text="@string/tag_add" />
+            app:layout_constraintTop_toBottomOf="@id/barrier_header"
+            tools:text="@string/text_add_favorite" />
 
         <TextView
             android:id="@+id/tv_events"

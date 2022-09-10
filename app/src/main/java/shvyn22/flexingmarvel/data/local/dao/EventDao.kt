@@ -1,5 +1,6 @@
 package shvyn22.flexingmarvel.data.local.dao
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -11,7 +12,7 @@ import shvyn22.flexingmarvel.data.local.model.EventModel
 interface EventDao {
 
     @Query("SELECT * FROM Event WHERE title LIKE '%' || :query || '%'")
-    fun getEvents(query: String): Flow<List<EventModel>>
+    fun getEvents(query: String): PagingSource<Int, EventModel>
 
     @Query("SELECT EXISTS (SELECT 1 FROM Event WHERE id = :id)")
     fun isEventFavorite(id: Int): Flow<Boolean>

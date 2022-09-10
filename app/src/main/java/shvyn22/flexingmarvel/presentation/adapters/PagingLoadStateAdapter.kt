@@ -30,7 +30,7 @@ class PagingLoadStateAdapter(
 
         fun bind(loadState: LoadState) {
             binding.apply {
-                progressBar.isVisible = loadState is LoadState.Loading
+                pbLoading.isVisible = loadState is LoadState.Loading
                 btnRetry.isVisible = loadState !is LoadState.Loading
                 tvError.isVisible = loadState !is LoadState.Loading
 
