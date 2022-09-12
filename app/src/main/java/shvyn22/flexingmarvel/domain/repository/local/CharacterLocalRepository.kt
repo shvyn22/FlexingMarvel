@@ -8,7 +8,6 @@ import shvyn22.flexingmarvel.data.local.dao.CharacterDao
 import shvyn22.flexingmarvel.data.local.model.CharacterModel
 import shvyn22.flexingmarvel.util.API_LIMIT
 import shvyn22.flexingmarvel.util.MAX_PAGING_SIZE
-import kotlin.math.max
 
 class CharacterLocalRepository(
     private val dao: CharacterDao

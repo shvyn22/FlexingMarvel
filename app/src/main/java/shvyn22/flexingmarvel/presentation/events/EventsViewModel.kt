@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -17,7 +17,7 @@ import shvyn22.flexingmarvel.util.MainStateEvent
 import shvyn22.flexingmarvel.util.SEARCH_EVENTS_KEY
 import javax.inject.Inject
 
-@OptIn(FlowPreview::class)
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class EventsViewModel @Inject constructor(
     private val getEventsUseCase: GetEventsUseCase,
@@ -33,11 +33,11 @@ class EventsViewModel @Inject constructor(
     private val eventChannel = Channel<MainStateEvent<EventModel>>()
     val event = eventChannel.receiveAsFlow()
 
-    val pagingItems = searchQuery.flatMapConcat { query ->
+    val pagingItems = searchQuery.flatMapLatest { query ->
         getEventsUseCase(query).cachedIn(viewModelScope)
     }.stateIn(viewModelScope, SharingStarted.Lazily, PagingData.empty())
 
-    val items = searchQuery.flatMapConcat { query ->
+    val items = searchQuery.flatMapLatest { query ->
         getFavoriteEventsUseCase(query).cachedIn(viewModelScope)
     }.stateIn(viewModelScope, SharingStarted.Lazily, PagingData.empty())
 

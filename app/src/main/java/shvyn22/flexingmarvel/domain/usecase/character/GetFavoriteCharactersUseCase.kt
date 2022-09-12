@@ -9,9 +9,8 @@ import javax.inject.Inject
 
 class GetFavoriteCharactersUseCase @Inject constructor(
     private val repo: LocalRepository<CharacterModel>
-): GetFavoriteItemsUseCase<CharacterModel>{
+) : GetFavoriteItemsUseCase<CharacterModel> {
 
     override fun invoke(query: String): Flow<PagingData<CharacterModel>> =
         repo.getItems(query)
-
 }

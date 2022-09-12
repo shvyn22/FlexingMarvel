@@ -6,7 +6,7 @@ import androidx.core.view.isVisible
 import androidx.paging.LoadState
 import androidx.paging.LoadStateAdapter
 import androidx.recyclerview.widget.RecyclerView
-import shvyn22.flexingmarvel.databinding.FooterLoadStateBinding
+import shvyn22.flexingmarvel.databinding.PanelLoadStateBinding
 
 class PagingLoadStateAdapter(
     private val retry: () -> Unit
@@ -14,7 +14,7 @@ class PagingLoadStateAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, loadState: LoadState): PagingViewHolder {
         return PagingViewHolder(
-            FooterLoadStateBinding.inflate(
+            PanelLoadStateBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
             )
         )
@@ -25,7 +25,7 @@ class PagingLoadStateAdapter(
     }
 
     inner class PagingViewHolder(
-        private val binding: FooterLoadStateBinding
+        private val binding: PanelLoadStateBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(loadState: LoadState) {

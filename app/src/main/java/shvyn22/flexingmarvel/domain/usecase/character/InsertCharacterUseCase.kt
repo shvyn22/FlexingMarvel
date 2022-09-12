@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 class InsertCharacterUseCase @Inject constructor(
     private val repo: LocalRepository<CharacterModel>
-): InsertItemUseCase<CharacterModel> {
+) : InsertItemUseCase<CharacterModel> {
 
     override suspend fun invoke(item: CharacterModel) =
         repo.insertItem(item)

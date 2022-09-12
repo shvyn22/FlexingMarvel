@@ -3,8 +3,8 @@ package shvyn22.flexingmarvel.data.paging
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import retrofit2.HttpException
-import shvyn22.flexingmarvel.data.remote.api.ApiService
 import shvyn22.flexingmarvel.data.local.model.EventModel
+import shvyn22.flexingmarvel.data.remote.api.ApiService
 import shvyn22.flexingmarvel.util.API_LIMIT
 import java.io.IOException
 

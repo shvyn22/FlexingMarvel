@@ -18,6 +18,7 @@ import shvyn22.flexingmarvel.util.Resource
 class SeriesRemoteRepository(
     private val api: ApiService
 ) : RemoteRepository<SeriesModel> {
+
     override fun getItems(query: String): Flow<PagingData<SeriesModel>> =
         Pager(
             config = PagingConfig(

@@ -112,7 +112,7 @@ class CharactersFragment : Fragment(R.layout.fragment_characters) {
 
     private fun configureMenu() {
         activity?.addMenuProvider(object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {}
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) = Unit
 
             override fun onPrepareMenu(menu: Menu) {
                 super.onPrepareMenu(menu)

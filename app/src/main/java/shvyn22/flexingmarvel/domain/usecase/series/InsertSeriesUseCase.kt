@@ -1,6 +1,5 @@
 package shvyn22.flexingmarvel.domain.usecase.series
 
-import shvyn22.flexingmarvel.data.local.model.EventModel
 import shvyn22.flexingmarvel.data.local.model.SeriesModel
 import shvyn22.flexingmarvel.domain.repository.local.LocalRepository
 import shvyn22.flexingmarvel.domain.usecase.base.InsertItemUseCase
